@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const db = require("../resful Api session/models");
+const db = require("../restful-Api/models");
 // const Role = db.role;
 // db.sequelize.sync({force: true}).then(() => {
 //   console.log('Drop and Resync Db');
@@ -43,8 +43,8 @@ var corsOptions = {
   });
 
   // routes
-require('../resful Api session/routes/auth.routes')(app);
-require('../resful Api session/routes/user.routes')(app);
+require('../restful-Api/routes/auth.routes')(app);
+require('../restful-Api/routes/user.routes')(app);
   // set port, listen for requests
   const PORT = process.env.PORT || 9999;
   app.listen(PORT, () => {
