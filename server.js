@@ -26,7 +26,7 @@ const db = require("../resful Api session/models");
 // }
 //db.sequelize.sync();
 var corsOptions = {
-    origin: "http://localhost:8081"
+    origin: "http://localhost:9999"
   };
   
   app.use(cors(corsOptions));
@@ -46,7 +46,7 @@ var corsOptions = {
 require('../resful Api session/routes/auth.routes')(app);
 require('../resful Api session/routes/user.routes')(app);
   // set port, listen for requests
-  const PORT = process.env.PORT || 8081;
+  const PORT = process.env.PORT || 9999;
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
   });
