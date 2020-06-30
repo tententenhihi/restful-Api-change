@@ -1,42 +1,52 @@
-let express = require('express');
-let app = express();
-let morgan = require('morgan');
-let mongoose=require('mongoose');
-let bodyParser = require('body-parser');
-let port = process.env.PORT || 9999;
-require('dotenv/config');
-const config ={
-    host     : process.env.host,
-    user     : process.env.user,
-    password : process.env.password,
-    database : process.env.database
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const app = express();
+const db = require("../resful Api session/models");
+// const Role = db.role;
+// db.sequelize.sync({force: true}).then(() => {
+//   console.log('Drop and Resync Db');
+//   initial();
+// });
+// function initial() {
+//   Role.create({
+//     id: 1,
+//     name: "user"
+//   });
+ 
+//   Role.create({
+//     id: 2,
+//     name: "moderator"
+//   });
+ 
+//   Role.create({
+//     id: 3,
+//     name: "admin"
+//   });
+// }
+//db.sequelize.sync();
+var corsOptions = {
+    origin: "http://localhost:8081"
   };
-let pet = require('./controllers/routes/petRoutes');
+  
+  app.use(cors(corsOptions));
+  
+  // parse requests of content-type - application/json
+  app.use(bodyParser.json());
+  
+  // parse requests of content-type - application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({ extended: true }));
+  
+  // simple route
+  app.get("/", (req, res) => {
+    res.json({ message: "Welcome to bezkoder application." });
+  });
 
-if(process.env.NODE_ENV !== 'test') {
-    app.use(morgan('combined'));
-}
-
-//parse application/json and look for raw text
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.text());
-app.use(bodyParser.json({ type: 'application/json'}));
-
-
-app.get("/", (req, res) => res.json({message: "Welcome to our Petstore!"}));
-
-app.route("/getcountries")
-    .get(pet.getcountry);
-app.route("/pets")
-    .get(pet.getPets)
-    .post(pet.postPet);
-app.route("/pets/:id")
-    .get(pet.getPet)
-    .delete(pet.deletePet)
-    .put(pet.updatePet);
-
-app.listen(port);
-console.log("Listening on port " + port);
-
-module.exports = app; // for testing
+  // routes
+require('../resful Api session/routes/auth.routes')(app);
+require('../resful Api session/routes/user.routes')(app);
+  // set port, listen for requests
+  const PORT = process.env.PORT || 8081;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}.`);
+  });
