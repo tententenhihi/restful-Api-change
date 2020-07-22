@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const db = require("../restful-Api/models");
+const requestIp = require('request-ip');
 // const Role = db.role;
 // db.sequelize.sync({force: true}).then(() => {
 //   console.log('Drop and Resync Db');
@@ -30,10 +31,10 @@ var corsOptions = {
   };
   
   app.use(cors(corsOptions));
-  
+  app.use(requestIp.mw());
+
   // parse requests of content-type - application/json
   app.use(bodyParser.json());
-  
   // parse requests of content-type - application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: true }));
   

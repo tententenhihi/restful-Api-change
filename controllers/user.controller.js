@@ -7,6 +7,8 @@ const random = require('random');
 const namedv=require("../fake/randomNameDevice");
 const { Console } = require("console");
 const sha1 = require('js-sha1');
+const Ipadress=require("../ip");
+const requestIp = require('request-ip');
 exports.allAccess = (req, res) => {
     res.status(200).send("Public Content.");
   };
@@ -253,6 +255,7 @@ var UDID=getUDID();
     });
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
+const ip = req.clientIp;
        var data = 	({
 
 			 	"SerialNumber": getserial,
@@ -291,7 +294,8 @@ var UDID=getUDID();
         "ScreenHeight":ScreenHeight,
         "ScreenWidth":ScreenWidth,
         "ResolutionHeight":ResolutionHeight,
-        "ResolutionWidth":ResolutionWidth
+        "ResolutionWidth":ResolutionWidth,
+        "Myip:":ip
 			 });
      res.status(200).send(data);
   };
