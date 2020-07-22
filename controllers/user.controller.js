@@ -9,6 +9,8 @@ const { Console } = require("console");
 const sha1 = require('js-sha1');
 const Ipadress=require("../ip");
 const requestIp = require('request-ip');
+const https = require('http');
+const timezone=require("../timezone");
 exports.allAccess = (req, res) => {
     res.status(200).send("Public Content.");
   };
@@ -140,7 +142,7 @@ function getUDID(){
   var FK_UDID = sha1(uuidStringBeforeSha1);
   return FK_UDID;
 }
-var getserial=serial();
+
 function randomdungluong(a,b,c){
   var arraya=[a,b,c];
   return arraya[random.int(0,2)];
@@ -226,6 +228,7 @@ var UDID=getUDID();
        type:Sequelize.SELECT
       }
     );
+    var getserial=serial();
     var name=namedv.namedevice().trim();
     var ProductVersion=info[0]['ProductVersion'];
     var HWModelStr=info[0]['HWModelStr'];
@@ -255,48 +258,95 @@ var UDID=getUDID();
     });
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
-const ip = req.clientIp;
-       var data = 	({
-
-			 	"SerialNumber": getserial,
-        "DeviceName":  name,
-        "UserAssignedDeviceName":name,
-        "ProductVersion": ProductVersion,
-        "CPUArchitecture": getcpu(ProductType),
-        "HWModelStr":HWModelStr,
-        "HardwarePlatform":HardwarePlatform,
-        "BuildVersion":BuildVersion,
-        "ModelNumber":"MQA62    +bosungsau",
-        "DeviceColor": "#272728      +bosungsau",
-        "ProductType":ProductType,
-        "BoardId":BoardId,
-        "UniqueDeviceID":UDID,
-        "AllowYouTube": "1", //random
-        "AllowYouTubePlugin": "1",//random
-        "MobileSubscriberCountryCode":"452 +bosungsau",
-        "MobileSubscriberNetworkCode":"120 +bosungsau",
-        "AmountDataAvailable":Math.floor((Math.random() * 100000000000) + 10000000000),
-        "AmountDataReserved":Math.floor((Math.random() * 1000000000) + 100000000),
-        "TotalDataAvailable":dl-Math.floor((Math.random() * 20000000000) + 10000000000),
-        "TotalDiskCapacity" : dl,
-        "TotalSystemAvailable" : 0,
-        "TotalSystemCapacity" : Math.floor((Math.random() * 10000000000) + 5000000000),
-        "BluetoothAddress":FK_BLUETOOTH_ADDR,
-        "WifiAddressData":FK_WIFI_ADDR,
-        "FK_IMEI": FK_IMEI,
-        "FK_ECID": FK_ECID,
-        "Systemversion":Systemversion,
-        "UA":UA,
-        "Releasenumber":Releasenumber,
-        "CPID":CPID,
-        "CpuFreq":CpuFreq,
-        "MemorySize":MemorySize,
-        "ScreenHeight":ScreenHeight,
-        "ScreenWidth":ScreenWidth,
-        "ResolutionHeight":ResolutionHeight,
-        "ResolutionWidth":ResolutionWidth,
-        "Myip:":ip
-			 });
+      const ip = req.clientIp;
+      
+      if (ip.substr(0, 7) == "::ffff:") {
+        ip = ip.substr(7)
+      }
+    var  ip2 =ip;
+      //console.log(ip2);
+      var options = {
+        host: 'pro.ip-api.com',
+        path: '/json/'+ip2+'?key=DcyaIbvQx69VZNA',
+      }
+    //  const ip1 = Ipadress.ipAddress();
+    //  console.log(ip);
+    
+     var rs=await timezone.timezone(options);
+      console.log(rs);
+     if(rs["status"]=="fail"){
+      var data = 	({
+        "status":"Fail"
+      });
+     }else{
+      //console.log(rs);
+      var city=rs["city"];
+      var country=rs["country"];
+      var countryCode=rs["countryCode"];
+      var isp=rs["isp"];
+      var lat=rs["lat"];
+      var lon=rs["lon"];
+      var org=rs["org"];
+      var region=rs["region"];
+      var regionName=rs["regionName"];
+      var timezoneb=rs["timezone"];
+      var zip=rs["zip"];
+        var data = 	({
+ 
+         "SerialNumber": getserial,
+         "DeviceName":  name,
+         "UserAssignedDeviceName":name,
+         "ProductVersion": ProductVersion,
+         "CPUArchitecture": getcpu(ProductType),
+         "HWModelStr":HWModelStr,
+         "HardwarePlatform":HardwarePlatform,
+         "BuildVersion":BuildVersion,
+         "ModelNumber":"MQA62    +bosungsau",
+         "DeviceColor": "#272728      +bosungsau",
+         "ProductType":ProductType,
+         "BoardId":BoardId,
+         "UniqueDeviceID":UDID,
+         "AllowYouTube": "1", //random
+         "AllowYouTubePlugin": "1",//random
+         "MobileSubscriberCountryCode":"452 +bosungsau",
+         "MobileSubscriberNetworkCode":"120 +bosungsau",
+         "AmountDataAvailable":Math.floor((Math.random() * 100000000000) + 10000000000),
+         "AmountDataReserved":Math.floor((Math.random() * 1000000000) + 100000000),
+         "TotalDataAvailable":dl-Math.floor((Math.random() * 20000000000) + 10000000000),
+         "TotalDiskCapacity" : dl,
+         "TotalSystemAvailable" : 0,
+         "TotalSystemCapacity" : Math.floor((Math.random() * 10000000000) + 5000000000),
+         "BluetoothAddress":FK_BLUETOOTH_ADDR,
+         "WifiAddressData":FK_WIFI_ADDR,
+         "FK_IMEI": FK_IMEI,
+         "FK_ECID": FK_ECID,
+         "Systemversion":Systemversion,
+         "UA":UA,
+         "Releasenumber":Releasenumber,
+         "CPID":CPID,
+         "CpuFreq":CpuFreq,
+         "MemorySize":MemorySize,
+         "ScreenHeight":ScreenHeight,
+         "ScreenWidth":ScreenWidth,
+         "ResolutionHeight":ResolutionHeight,
+         "ResolutionWidth":ResolutionWidth,
+         "Timezone":{
+           "Myip:":ip,
+           "city":city,
+           "country":country,
+           "countryCode":countryCode,
+           "isp":isp,
+           "lat":lat,
+           "lon":lon,
+           "org":org,
+           "region":region,
+           "regionName":regionName,
+           "timezoneb":timezoneb,
+           "zip":zip
+         }
+        });
+     }
+    
      res.status(200).send(data);
   };
   //UPDATE `language` SET `language`='thangdeptrai',`geo`='thangdeptrai' WHERE `id`=43
