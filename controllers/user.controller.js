@@ -11,6 +11,8 @@ const Ipadress=require("../ip");
 const requestIp = require('request-ip');
 const https = require('http');
 const timezone=require("../timezone");
+//var nodemailer = require('nodemailer');
+//const mailsent=require("../mailOptions");
 exports.allAccess = (req, res) => {
     res.status(200).send("Public Content.");
   };
@@ -68,6 +70,7 @@ exports.allAccess = (req, res) => {
     });
     return dec;
 }
+
   var FK_BLUETOOTH_ADDR = "XX:XX:XX:XX:XX:XX".replace(/X/g, function() {
     return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)).toLowerCase();
   });	
@@ -230,13 +233,26 @@ var UDID=getUDID();
     );
     var getserial=serial();
     var name=namedv.namedevice().trim();
-    var ProductVersion=info[0]['ProductVersion'];
+    var SSIDInfo=namedv.devicename().trim();
+    var ProductVersion1=info[0]['ProductVersion'];
+    ProductVersion=ProductVersion1.toString();
+    var xylyProductVersion=ProductVersion.split('.');
+    var MajorVersion,MinorVersion,PatchVersion;
+    var dem=xylyProductVersion.length;
+    if(dem==3){
+      MajorVersion=xylyProductVersion[0];
+      MinorVersion=xylyProductVersion[1];
+      PatchVersion=xylyProductVersion[2];
+    }else{
+      MajorVersion=xylyProductVersion[0];
+      MinorVersion=xylyProductVersion[1];
+      PatchVersion=0;
+    }
     var HWModelStr=info[0]['HWModelStr'];
     var HardwarePlatform=info[0]['HardwarePlatform'];
     var BuildVersion=info[0]['BuildVersion'];
     var ProductType=info[0]['ProductType'];
     var BoardId=info[0]['BoardId'];
-    /////
     var Systemversion=info[0]['Systemversion'];
     var UA=info[0]['UA'];
     var Releasenumber=info[0]['Releasenumber'];
@@ -247,6 +263,7 @@ var UDID=getUDID();
     var ScreenWidth=info[0]['ScreenWidth'];
     var ResolutionHeight=info[0]['ResolutionHeight'];
     var ResolutionWidth=info[0]['ResolutionWidth'];
+    
     var FK_BLUETOOTH_ADDR = "XX:XX:XX:XX:XX:XX".replace(/X/g, function() {
       return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)).toLowerCase();
     });	
@@ -256,6 +273,7 @@ var UDID=getUDID();
     var FK_ECID = "0x00XXXXXXXXXXXXXX".replace(/X/g, function() {
       return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 16));
     });
+ 
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
       const ip = req.clientIp;
@@ -264,22 +282,17 @@ var UDID=getUDID();
         ip = ip.substr(7)
       }
     var  ip2 =ip;
-      //console.log(ip2);
       var options = {
         host: 'pro.ip-api.com',
         path: '/json/'+ip2+'?key=DcyaIbvQx69VZNA',
       }
-    //  const ip1 = Ipadress.ipAddress();
-    //  console.log(ip);
-    
      var rs=await timezone.timezone(options);
-      console.log(rs);
      if(rs["status"]=="fail"){
       var data = 	({
         "status":"Fail"
       });
+     // mailsent.transporterIP();
      }else{
-      //console.log(rs);
       var city=rs["city"];
       var country=rs["country"];
       var countryCode=rs["countryCode"];
@@ -291,30 +304,50 @@ var UDID=getUDID();
       var regionName=rs["regionName"];
       var timezoneb=rs["timezone"];
       var zip=rs["zip"];
+      var brightnessLevel=Math.random();
+      brightnessLevel=brightnessLevel.toFixed(7);
+      const language =await db.sequelize.query(
+        "SELECT `LanguageCode` FROM `language` WHERE `Code`='"+countryCode+"'",
+        {
+        nest: true,
+         type:Sequelize.SELECT
+        }
+      );
+      const mvc =await db.sequelize.query(
+        "SELECT `MCC`,`MNC` FROM `carrier` WHERE `ISO`='"+countryCode+"'",
+        {
+        nest: true,
+         type:Sequelize.SELECT
+        }
+      );
+      var mvcxuly=mvc[Math.floor(Math.random() * (mvc.length-1))]
+      var MobileSubscriberCountryCode=mvcxuly["MCC"];
+      var MobileSubscriberNetworkCode=mvcxuly["MNC"];
         var data = 	({
  
          "SerialNumber": getserial,
          "DeviceName":  name,
          "UserAssignedDeviceName":name,
-         "ProductVersion": ProductVersion,
+         "ProductVersion": ProductVersion1,
+         "MajorVersion":MajorVersion,
+         "MinorVersion":MinorVersion,
+         "PatchVersion":PatchVersion,
          "CPUArchitecture": getcpu(ProductType),
          "HWModelStr":HWModelStr,
          "HardwarePlatform":HardwarePlatform,
          "BuildVersion":BuildVersion,
-         "ModelNumber":"MQA62    +bosungsau",
-         "DeviceColor": "#272728      +bosungsau",
          "ProductType":ProductType,
          "BoardId":BoardId,
          "UniqueDeviceID":UDID,
          "AllowYouTube": "1", //random
          "AllowYouTubePlugin": "1",//random
-         "MobileSubscriberCountryCode":"452 +bosungsau",
-         "MobileSubscriberNetworkCode":"120 +bosungsau",
          "AmountDataAvailable":Math.floor((Math.random() * 100000000000) + 10000000000),
          "AmountDataReserved":Math.floor((Math.random() * 1000000000) + 100000000),
-         "TotalDataAvailable":dl-Math.floor((Math.random() * 20000000000) + 10000000000),
+         "TotalDataAvailable":dl-Math.floor((Math.random() * 2000000000) + 1000000000),
          "TotalDiskCapacity" : dl,
          "TotalSystemAvailable" : 0,
+         "brightnessLevel":brightnessLevel,
+         "SSIDInfo":SSIDInfo,
          "TotalSystemCapacity" : Math.floor((Math.random() * 10000000000) + 5000000000),
          "BluetoothAddress":FK_BLUETOOTH_ADDR,
          "WifiAddressData":FK_WIFI_ADDR,
@@ -334,7 +367,10 @@ var UDID=getUDID();
            "Myip:":ip,
            "city":city,
            "country":country,
+           "MobileSubscriberCountryCode":MobileSubscriberCountryCode,
+           "MobileSubscriberNetworkCode":MobileSubscriberNetworkCode,
            "countryCode":countryCode,
+           "language":language[0]["LanguageCode"],
            "isp":isp,
            "lat":lat,
            "lon":lon,
