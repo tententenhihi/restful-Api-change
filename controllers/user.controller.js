@@ -11,6 +11,8 @@ const Ipadress=require("../ip");
 const requestIp = require('request-ip');
 const https = require('http');
 const timezone=require("../timezone");
+const performance = require('perf_hooks').performance;
+
 //var nodemailer = require('nodemailer');
 //const mailsent=require("../mailOptions");
 exports.allAccess = (req, res) => {
@@ -70,7 +72,6 @@ exports.allAccess = (req, res) => {
     });
     return dec;
 }
-
   var FK_BLUETOOTH_ADDR = "XX:XX:XX:XX:XX:XX".replace(/X/g, function() {
     return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)).toLowerCase();
   });	
@@ -130,9 +131,24 @@ exports.allAccess = (req, res) => {
 
     return t;
 }
+function generateUUID() { // Public Domain/MIT
+  var d = new Date().getTime();//Timestamp
+  var d2 = (performance && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16;//random number between 0 and 16
+      if(d > 0){//Use timestamp until depleted
+          r = (d + r)%16 | 0;
+          d = Math.floor(d/16);
+      } else {//Use microseconds since page-load if supported
+          r = (d2 + r)%16 | 0;
+          d2 = Math.floor(d2/16);
+      }
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
 var FK_IMEI = imei_gen();
 function serial(){
-  var array =["DX","FN","F2","FY","FK","FV","F8","DA"];
+  var array =["DX","FN","F2","FY","FK","FV","F8","DA","FT","KV","KT","KG"];
   var randomserial=randomstring.generate(10);
   var randomint=random.int(0,array.length-1);
   var s=array[randomint]+randomserial.toUpperCase();
@@ -231,6 +247,7 @@ var UDID=getUDID();
        type:Sequelize.SELECT
       }
     );
+    //  console.log(uuid());
     var getserial=serial();
     var name=namedv.namedevice().trim();
     var SSIDInfo=namedv.devicename().trim();
@@ -276,22 +293,21 @@ var UDID=getUDID();
  
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
-      const ip = req.clientIp;
+      var ip = req.clientIp;
       
       if (ip.substr(0, 7) == "::ffff:") {
         ip = ip.substr(7)
       }
-    var  ip2 =ip;
+      var ip2 =ip;
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+ip2+'?key=DcyaIbvQx69VZNA',
+        path: '/json/'+ip2+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
       var data = 	({
         "status":"Fail"
       });
-     // mailsent.transporterIP();
      }else{
       var city=rs["city"];
       var country=rs["country"];
@@ -304,17 +320,26 @@ var UDID=getUDID();
       var regionName=rs["regionName"];
       var timezoneb=rs["timezone"];
       var zip=rs["zip"];
+      var offset=rs["offset"];
+      var proxy=rs["proxy"];
       var brightnessLevel=Math.random();
       brightnessLevel=brightnessLevel.toFixed(7);
-      const language =await db.sequelize.query(
-        "SELECT `LanguageCode` FROM `language` WHERE `Code`='"+countryCode+"'",
-        {
-        nest: true,
-         type:Sequelize.SELECT
-        }
-      );
+      var lang;
+      try{
+        const language=await db.sequelize.query(
+          "SELECT `LanguageCode` FROM `language` WHERE `Code`='"+countryCode+"'",
+          {
+          nest: true,
+           type:Sequelize.SELECT
+          }
+        );
+        lang=language[0]["LanguageCode"];
+      }catch{
+        lang="en-US";
+      }
+      var iso639=lang.split('-')[0];
       const mvc =await db.sequelize.query(
-        "SELECT `MCC`,`MNC` FROM `carrier` WHERE `ISO`='"+countryCode+"'",
+        "SELECT `MCC`,`MNC`,`Network` FROM `carrier` WHERE `ISO`='"+countryCode+"'",
         {
         nest: true,
          type:Sequelize.SELECT
@@ -323,6 +348,7 @@ var UDID=getUDID();
       var mvcxuly=mvc[Math.floor(Math.random() * (mvc.length-1))]
       var MobileSubscriberCountryCode=mvcxuly["MCC"];
       var MobileSubscriberNetworkCode=mvcxuly["MNC"];
+      var Network=mvcxuly["Network"];
         var data = 	({
  
          "SerialNumber": getserial,
@@ -339,6 +365,8 @@ var UDID=getUDID();
          "ProductType":ProductType,
          "BoardId":BoardId,
          "UniqueDeviceID":UDID,
+         "IDFV":generateUUID().toUpperCase(),
+         "IDFA":generateUUID().toUpperCase(),
          "AllowYouTube": "1", //random
          "AllowYouTubePlugin": "1",//random
          "AmountDataAvailable":Math.floor((Math.random() * 100000000000) + 10000000000),
@@ -369,14 +397,18 @@ var UDID=getUDID();
            "country":country,
            "MobileSubscriberCountryCode":MobileSubscriberCountryCode,
            "MobileSubscriberNetworkCode":MobileSubscriberNetworkCode,
+           "Network":Network,
            "countryCode":countryCode,
-           "language":language[0]["LanguageCode"],
+           "language":lang,
+           "iso639":iso639,
            "isp":isp,
            "lat":lat,
            "lon":lon,
            "org":org,
            "region":region,
            "regionName":regionName,
+           "offset":offset,
+           "proxy":proxy,
            "timezoneb":timezoneb,
            "zip":zip
          }
