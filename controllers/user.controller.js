@@ -168,7 +168,7 @@ function random3g4g(){
   }
   return chon;
 }
-var DeviceToken=randomstring.generate(64);
+
 function getUDID(){
   
   var imeiConvert = h2d(FK_IMEI);
@@ -305,7 +305,7 @@ var UDID=getUDID();
     var FK_ECID = "0x00XXXXXXXXXXXXXX".replace(/X/g, function() {
       return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 16));
     });
-    
+    var DeviceToken=randomstring.generate(64);
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
       var ip = req.clientIp;
