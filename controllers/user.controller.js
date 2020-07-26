@@ -148,7 +148,7 @@ function generateUUID() { // Public Domain/MIT
 }
 var FK_IMEI = imei_gen();
 function serial(){
-  var array =["DX","FN","F2","FY","FK","FV","F8","DA","FT","KV","KT","KG"];
+  var array =["DX","FN","F2","FY","FK","FV","F8","DA","FT","KV","KT","KG","NK","NY","NQ"];
   var randomserial=randomstring.generate(10);
   var randomint=random.int(0,array.length-1);
   var s=array[randomint]+randomserial.toUpperCase();
@@ -290,7 +290,7 @@ var UDID=getUDID();
     var FK_ECID = "0x00XXXXXXXXXXXXXX".replace(/X/g, function() {
       return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 16));
     });
- 
+    var DeviceToken=randomstring.generate(64);
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
       var ip = req.clientIp;
@@ -381,6 +381,7 @@ var UDID=getUDID();
          "WifiAddressData":FK_WIFI_ADDR,
          "FK_IMEI": FK_IMEI,
          "FK_ECID": FK_ECID,
+         "DeviceToken":DeviceToken.toLowerCase(),
          "Systemversion":Systemversion,
          "UA":UA,
          "Releasenumber":Releasenumber,
