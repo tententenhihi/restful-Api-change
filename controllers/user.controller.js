@@ -305,7 +305,10 @@ var UDID=getUDID();
     var FK_ECID = "0x00XXXXXXXXXXXXXX".replace(/X/g, function() {
       return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 16));
     });
-    var DeviceToken=randomstring.generate(64);
+    var DeviceToken=randomstring.generate({
+      length:64,
+      charset: 'abcdf0123456789'
+    });
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
       var ip = req.clientIp;
@@ -316,7 +319,7 @@ var UDID=getUDID();
       var ip2 =ip;
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+'116.109.194.124'+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+        path: '/json/'+ip2+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
