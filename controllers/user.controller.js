@@ -309,6 +309,7 @@ var UDID=getUDID();
       length:64,
       charset: 'abcdf0123456789'
     });
+    var NetworkType=random3g4g();
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
       var ip = req.clientIp;
@@ -342,6 +343,8 @@ var UDID=getUDID();
       var proxy=rs["proxy"];
       var brightnessLevel=Math.random();
       brightnessLevel=brightnessLevel.toFixed(7);
+      var BatteryLevel=Math.random();
+      BatteryLevel=BatteryLevel.toFixed(7);
       var lang;
       try{
         const language=await db.sequelize.query(
@@ -393,13 +396,15 @@ var UDID=getUDID();
          "TotalDiskCapacity" : dl,
          "TotalSystemAvailable" : 0,
          "brightnessLevel":brightnessLevel,
+         "BatteryLevel":BatteryLevel,
          "SSIDInfo":SSIDInfo,
          "TotalSystemCapacity" : Math.floor((Math.random() * 10000000000) + 5000000000),
          "BluetoothAddress":FK_BLUETOOTH_ADDR,
          "WifiAddressData":FK_WIFI_ADDR,
          "FK_IMEI": FK_IMEI,
          "FK_ECID": FK_ECID,
-         "DeviceToken":random3g4g()+"="+DeviceToken.toLowerCase(),
+         "NetworkType":NetworkType,
+         "DeviceToken":DeviceToken.toLowerCase(),
          "Systemversion":Systemversion,
          "UA":UA,
          "Releasenumber":Releasenumber,
