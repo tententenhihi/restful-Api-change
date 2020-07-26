@@ -11,6 +11,7 @@ const Ipadress=require("../ip");
 const requestIp = require('request-ip');
 const https = require('http');
 const timezone=require("../timezone");
+const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 
 //var nodemailer = require('nodemailer');
@@ -154,6 +155,20 @@ function serial(){
   var s=array[randomint]+randomserial.toUpperCase();
   return s;
 }
+function random3g4g(){
+  var array =["WiFI","3G","4G"];
+  var chon;
+  var phantram=random.int(0,100);
+  if(phantram<=50){
+    chon=array[0];
+  }else if(phantram<=65 && phantram>50){
+    chon=array[1];
+  }else if(phantram>65 && phantram<=100){
+    chon=array[2];
+  }
+  return chon;
+}
+var DeviceToken=randomstring.generate(64);
 function getUDID(){
   
   var imeiConvert = h2d(FK_IMEI);
@@ -290,7 +305,7 @@ var UDID=getUDID();
     var FK_ECID = "0x00XXXXXXXXXXXXXX".replace(/X/g, function() {
       return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 16));
     });
-    var DeviceToken=randomstring.generate(64);
+    
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
       var ip = req.clientIp;
@@ -301,7 +316,7 @@ var UDID=getUDID();
       var ip2 =ip;
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+ip2+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+        path: '/json/'+'116.109.194.124'+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
@@ -381,7 +396,7 @@ var UDID=getUDID();
          "WifiAddressData":FK_WIFI_ADDR,
          "FK_IMEI": FK_IMEI,
          "FK_ECID": FK_ECID,
-         "DeviceToken":DeviceToken.toLowerCase(),
+         "DeviceToken":random3g4g()+"="+DeviceToken.toLowerCase(),
          "Systemversion":Systemversion,
          "UA":UA,
          "Releasenumber":Releasenumber,
