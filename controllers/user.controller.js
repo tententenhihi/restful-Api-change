@@ -156,7 +156,7 @@ function serial(){
   return s;
 }
 function random3g4g(){
-  var array =["WiFI","3G","4G"];
+  var array =["WiFi","3G","4G"];
   var chon;
   var phantram=random.int(0,100);
   if(phantram<=50){
