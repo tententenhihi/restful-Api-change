@@ -13,9 +13,6 @@ const https = require('http');
 const timezone=require("../timezone");
 const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
-
-//var nodemailer = require('nodemailer');
-//const mailsent=require("../mailOptions");
 exports.allAccess = (req, res) => {
     res.status(200).send("Public Content.");
   };
@@ -320,7 +317,7 @@ var UDID=getUDID();
       var ip2 =ip;
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+ip2+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+        path: '/json/'+"113.161.32.10"+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
@@ -441,17 +438,31 @@ var UDID=getUDID();
     
      res.status(200).send(data);
   };
+
   //UPDATE `language` SET `language`='thangdeptrai',`geo`='thangdeptrai' WHERE `id`=43
   exports.update = async(req, res) => {
     const [results,metadata] = await db.sequelize.query('UPDATE `language` SET `language`=\'thangdeptrai5\',`geo`=\'thangdeptrai5\' WHERE `id`=43');
      res.status(200).send(results);
   };
   //INSERT INTO `language`(`id`, `language`, `geo`) VALUES (45,/'t1/',/'t2/')
-  exports.insert=async(req, res) => {
-   await db.sequelize.query('INSERT INTO `language`(`id`, `language`, `geo`) VALUES (48,\'t1\',\'t2\')',
-    { type: Sequelize.QueryTypes.INSERT }).then(function(results){
-      res.status(200).send(results);
-    });
+  exports.createoldDevice=async(req, res) => {
+    if (!req.body) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });}else{
+        var myJSON = JSON.stringify(req.body);
+        var d = new Date();
+        var date_string = d.toLocaleDateString("zh-CN");
+       // console.log(d);
+        
+   let country = req.headers["country"];
+   let network=req.headers["network"];
+        await db.sequelize.query("INSERT INTO `olddevice`(`old`, `Date_Create`, `Network`) VALUES ('"+myJSON+"','"+date_string.replace('/','-').replace('/','-')+"','"+network+"')",
+        { type: Sequelize.QueryTypes.INSERT }).then(function(results){
+          res.status(200).send("Success");
+        });
+      }
+ 
   };
   // lam delete
   

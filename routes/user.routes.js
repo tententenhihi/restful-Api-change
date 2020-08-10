@@ -4,9 +4,8 @@ const controller = require("../controllers/user.controller");
 module.exports =  function(app) {
   app.use(function(req, res, next) {
     res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
-    );
+      "Access-Control-Allow-Headers","x-access-token, Origin, Content-Type, Accept"
+      )
     next();
   });
   app.get("/api/test/all", controller.allAccess);
@@ -31,7 +30,6 @@ module.exports =  function(app) {
   app.get("/api/ssh",
   [authJwt.verifyToken, authJwt.isModeratorOrAdmin],
   controller.getssh);
-   app.get("/api/fakeinfo",
-  [authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-   controller.SELECT);
+   app.get("/api/fakeinfo",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.SELECT);
+   app.post("/api/fakeinfo/PostoldDevice",controller.createoldDevice);
 };
