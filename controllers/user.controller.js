@@ -453,15 +453,50 @@ var UDID=getUDID();
         var myJSON = JSON.stringify(req.body);
         var d = new Date();
         var date_string = d.toLocaleDateString("zh-CN");
-       // console.log(d);
-        
-   let country = req.headers["country"];
-   let network=req.headers["network"];
-        await db.sequelize.query("INSERT INTO `olddevice`(`old`, `Date_Create`, `Network`) VALUES ('"+myJSON+"','"+date_string.replace('/','-').replace('/','-')+"','"+network+"')",
+       let country = req.headers["country"];
+       let network=req.headers["network"];
+       //SELECT `id`,`old` FROM `olddevice` WHERE `id` NOT IN (SELECT id_note FROM olddevice_used) AND `Date_Create`<='2020-08-11'
+        await db.sequelize.query("INSERT INTO `olddevice`(`old`, `Date_Create`, `Network`, `country`) VALUES ('"+myJSON+"','"+date_string.replace('/','-').replace('/','-')+"','"+network+"','"+country+"')",
         { type: Sequelize.QueryTypes.INSERT }).then(function(results){
           res.status(200).send("Success");
         });
       }
+ 
+  };
+  exports.getoldDevice=async(req, res) => {
+    let country = req.headers["country"];
+    let network=req.headers["network"];
+    var d = new Date();
+    d.setDate(d.getDate());
+    var date_string = d.toLocaleDateString("zh-CN");
+    var sql="";
+    if(country=="all"){
+      sql="SELECT `id`,`old` FROM `olddevice` WHERE `id` NOT IN(SELECT id_note FROM olddevice_used) AND `Date_Create`<='"+date_string.replace('/','-').replace('/','-')+"' AND `Network`='"+network+"' ORDER BY RAND() LIMIT 1";
+     
+    }else{
+      sql="SELECT `id`,`old` FROM `olddevice` WHERE `id` NOT IN(SELECT id_note FROM olddevice_used) AND `Date_Create`<='"+date_string.replace('/','-').replace('/','-')+"' AND `Network`='"+network+"' AND `country`='"+country+"' ORDER BY RAND() LIMIT 1";
+    }
+    const old=await db.sequelize.query(
+      sql,
+      {
+      nest: true,
+       type:Sequelize.SELECT
+      }
+    );
+    var d1 = new Date();
+    var date_string1 = d1.toLocaleDateString("zh-CN");
+    if(old!=""){
+      var id=old[0]['id'];
+      await db.sequelize.query("INSERT INTO `olddevice_used`(`id_note`, `date_used`) VALUES ("+id+",'"+date_string1.replace('/','-').replace('/','-')+"')",
+      { type: Sequelize.QueryTypes.INSERT }).then(function(results){
+          res.status(200).send(old[0]['old']);
+      });
+    }else{
+      res.status(200).send("Fail");
+    }
+   
+  
+   
  
   };
   // lam delete
