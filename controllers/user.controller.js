@@ -317,7 +317,7 @@ var UDID=getUDID();
       var ip2 =ip;
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+"113.161.32.10"+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+        path: '/json/'+ip2+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
