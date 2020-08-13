@@ -253,7 +253,7 @@ function getcpu(HWModelStr){
 var UDID=getUDID();
   exports.SELECT = async(req, res) => {
     const info =await db.sequelize.query(
-      'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1',
+      'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1',
       {
       nest: true,
        type:Sequelize.SELECT
@@ -292,6 +292,7 @@ var UDID=getUDID();
     var ScreenWidth=info[0]['ScreenWidth'];
     var ResolutionHeight=info[0]['ResolutionHeight'];
     var ResolutionWidth=info[0]['ResolutionWidth'];
+    var nCpu=info[0]['nCpu'];
     
     var FK_BLUETOOTH_ADDR = "XX:XX:XX:XX:XX:XX".replace(/X/g, function() {
       return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)).toLowerCase();
@@ -314,10 +315,9 @@ var UDID=getUDID();
       if (ip.substr(0, 7) == "::ffff:") {
         ip = ip.substr(7)
       }
-      var ip2 =ip;
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+ip2+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+        path: '/json/'+ip+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
@@ -407,6 +407,7 @@ var UDID=getUDID();
          "Releasenumber":Releasenumber,
          "CPID":CPID,
          "CpuFreq":CpuFreq,
+         "nCpu":nCpu,
          "MemorySize":MemorySize,
          "ScreenHeight":ScreenHeight,
          "ScreenWidth":ScreenWidth,
