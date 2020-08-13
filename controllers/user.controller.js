@@ -253,7 +253,7 @@ function getcpu(HWModelStr){
 var UDID=getUDID();
   exports.SELECT = async(req, res) => {
     const info =await db.sequelize.query(
-      'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1',
+      'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1',
       {
       nest: true,
        type:Sequelize.SELECT
@@ -293,7 +293,7 @@ var UDID=getUDID();
     var ResolutionHeight=info[0]['ResolutionHeight'];
     var ResolutionWidth=info[0]['ResolutionWidth'];
     var nCpu=info[0]['nCpu'];
-    
+    var Cpufamily=info[0]['cpufamily'];
     var FK_BLUETOOTH_ADDR = "XX:XX:XX:XX:XX:XX".replace(/X/g, function() {
       return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)).toLowerCase();
     });	
@@ -408,6 +408,7 @@ var UDID=getUDID();
          "CPID":CPID,
          "CpuFreq":CpuFreq,
          "nCpu":nCpu,
+         "Cpufamily":Cpufamily,
          "MemorySize":MemorySize,
          "ScreenHeight":ScreenHeight,
          "ScreenWidth":ScreenWidth,
