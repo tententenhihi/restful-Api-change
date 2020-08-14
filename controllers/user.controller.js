@@ -367,6 +367,7 @@ var UDID=getUDID();
       var MobileSubscriberCountryCode=mvcxuly["MCC"];
       var MobileSubscriberNetworkCode=mvcxuly["MNC"];
       var Network=mvcxuly["Network"];
+      var bootime=Math.floor(Math.random() * 86400*365) + 86400*7;
         var data = 	({
  
          "SerialNumber": getserial,
@@ -433,6 +434,7 @@ var UDID=getUDID();
            "offset":offset,
            "proxy":proxy,
            "timezoneb":timezoneb,
+           "bootime":bootime,
            "zip":zip
          }
         });
@@ -455,8 +457,8 @@ var UDID=getUDID();
         var myJSON = JSON.stringify(req.body);
         var d = new Date();
         var date_string = d.toLocaleDateString("zh-CN");
-       let country = req.headers["country"];
-       let network=req.headers["network"];
+       let country = req.body.Country;
+       let network=req.body.Network;
        //SELECT `id`,`old` FROM `olddevice` WHERE `id` NOT IN (SELECT id_note FROM olddevice_used) AND `Date_Create`<='2020-08-11'
         await db.sequelize.query("INSERT INTO `olddevice`(`old`, `Date_Create`, `Network`, `country`) VALUES ('"+myJSON+"','"+date_string.replace('/','-').replace('/','-')+"','"+network+"','"+country+"')",
         { type: Sequelize.QueryTypes.INSERT }).then(function(results){
@@ -466,8 +468,8 @@ var UDID=getUDID();
  
   };
   exports.getoldDevice=async(req, res) => {
-    let country = req.headers["country"];
-    let network=req.headers["network"];
+    let country = req.body.Country;
+    let network=req.body.Network;
     var d = new Date();
     d.setDate(d.getDate());
     var date_string = d.toLocaleDateString("zh-CN");
@@ -496,10 +498,6 @@ var UDID=getUDID();
     }else{
       res.status(200).send("Fail");
     }
-   
-  
-   
- 
   };
   // lam delete
   
