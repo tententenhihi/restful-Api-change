@@ -459,8 +459,28 @@ var UDID=getUDID();
         var date_string = d.toLocaleDateString("zh-CN");
        let country = req.headers["country"];
        let network=req.headers["network"];
+        
        //SELECT `id`,`old` FROM `olddevice` WHERE `id` NOT IN (SELECT id_note FROM olddevice_used) AND `Date_Create`<='2020-08-11'
         await db.sequelize.query("INSERT INTO `olddevice`(`old`, `Date_Create`, `Network`, `country`) VALUES ('"+myJSON+"','"+date_string.replace('/','-').replace('/','-')+"','"+network+"','"+country+"')",
+        { type: Sequelize.QueryTypes.INSERT }).then(function(results){
+          res.status(200).send("Success");
+        });
+      }
+ 
+  };
+  exports.coveroldDevice=async(req, res) => {
+    if (!req.body) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });}else{
+        var myJSON = JSON.stringify(req.body);
+        var d = new Date();
+        var date_string = d.toLocaleDateString("zh-CN");
+       let country = req.headers["country"];
+       let network=req.headers["network"];
+        let time=req.headers["time"];
+       //SELECT `id`,`old` FROM `olddevice` WHERE `id` NOT IN (SELECT id_note FROM olddevice_used) AND `Date_Create`<='2020-08-11'
+        await db.sequelize.query("INSERT INTO `olddevice`(`old`, `Date_Create`, `Network`, `country`) VALUES ('"+myJSON+"','"+time+"','"+network+"','"+country+"')",
         { type: Sequelize.QueryTypes.INSERT }).then(function(results){
           res.status(200).send("Success");
         });

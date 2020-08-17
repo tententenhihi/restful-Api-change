@@ -32,6 +32,7 @@ module.exports =  function(app) {
   controller.getssh);
    app.get("/api/fakeinfo",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.SELECT);
    app.post("/api/fakeinfo/PostoldDevice",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.createoldDevice);
+   app.post("/api/fakeinfo/coverold",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.coveroldDevice);
    app.get("/api/fakeinfo/oldDevice",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.getoldDevice);
 
 };
