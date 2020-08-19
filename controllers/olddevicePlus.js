@@ -291,7 +291,7 @@ exports.getoldDevice=async(req, res) => {
      if(old!=""){
        var id=old[0]['id'];
       var sqldelete="DELETE FROM `olddevice` WHERE `id`="+id;
-       await db.sequelize.query(sqldelete,{nest: true,type:Sequelize.QueryTypes.DELETE});
+       //await db.sequelize.query(sqldelete,{nest: true,type:Sequelize.QueryTypes.DELETE});
      }else{
        
       var checksl="SELECT COUNT(`id`) AS 'SOLUONG' FROM `olddevice`";
