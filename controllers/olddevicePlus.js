@@ -223,13 +223,13 @@ exports.getoldDevice=async(req, res) => {
     var UDID=getUDID();
     var ip = req.clientIp;
     let networdbody=req.headers["network"];
-    let appid=req.body.Appid;
+    let appid=req.headers["bundle"];
      if (ip.substr(0, 7) == "::ffff:") {
        ip = ip.substr(7)
      }
      var options = {
        host: 'pro.ip-api.com',
-       path: '/json/'+ip+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+       path: '/json/'+'27.138.8.227'+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
      }
      var rs=await timezone.timezone(options);
     if(rs["status"]=="fail"){
@@ -286,41 +286,29 @@ exports.getoldDevice=async(req, res) => {
      d.setDate(d.getDate()-31);//-31
      var date_string = d.toLocaleDateString("zh-CN");
      date_string=date_string.replace('/','-').replace('/','-');
-    var sql="SELECT `id`,`device` FROM `olddevice` WHERE `date`<='"+date_string+"' AND `country`='"+countryCode+"' AND `network`='"+networdbody+"' ORDER BY RAND() LIMIT 1";
+    // var a=sql="SELECT `id`,`old` FROM `olddevice` WHERE `id` NOT IN(SELECT id_note FROM olddevice_used) AND `Date_Create`<='"+date_string.replace('/','-').replace('/','-')+"' AND `Network`='"+network+"' ORDER BY RAND() LIMIT 1";
+    var sql="SELECT `id`,`HWModelStr`,`DeviceName`,`HWMachine`,`idfaOld`,`SerialNumber` FROM `olddevice_conver` where `id` NOT IN(SELECT id_note FROM olddevice_used where appid='"+appid+"')and country='"+countryCode+"' and network='"+networdbody+"'";
      const old=await db.sequelize.query(sql,{nest: true,type:Sequelize.SELECT});
-     if(old!=""){
-       var id=old[0]['id'];
-      var sqldelete="DELETE FROM `olddevice` WHERE `id`="+id;
-       //await db.sequelize.query(sqldelete,{nest: true,type:Sequelize.QueryTypes.DELETE});
-     }else{
-       
-      var checksl="SELECT COUNT(`id`) AS 'SOLUONG' FROM `olddevice`";
-      const check=await db.sequelize.query(checksl,{nest: true,type:Sequelize.SELECT});
-      if(check[0]["SOLUONG"]==0){
-       sentMail.hetOlDevice();
-       res.status(200).send("Fail");
-       return;
-      }else{
-       res.status(200).send("Fail");
-       // qua server mới lấy khi hết coutry
-       return;
-      }
+     if(old==""){
       
+     }else{
+      var id=old[0]['id'];
+      var d1 = new Date();
+      var date_string1 = d1.toLocaleDateString("zh-CN");
+      date_string1=date_string1.replace('/','-').replace('/','-');
+      var sqlnote="INSERT INTO `olddevice_used`(`id_note`, `appid`, `date_used`) VALUES ("+id+",'"+appid+"','"+date_string1+"')";
+      await db.sequelize.query(sqlnote,{nest: true,type:Sequelize.QueryTypes.INSERT});
      }
-     var device=old[0]['device'];
-     var deviceit=device.split('||');
-     var DeviceName=deviceit[0];
-     var HWModelStr=deviceit[15];
-     var idfa=deviceit[9];
-     var idfv=deviceit[2];
-     var SerialNumber=deviceit[27];
-     var Machine=deviceit[10];
+     var HWModelStr=old[0]['HWModelStr'];
+     var idfa=old[0]['idfaOld'];
+     var SerialNumber=old[0]['SerialNumber'];
+     var Machine=old[0]['HWMachine'];
+     var DeviceName=old[0]['DeviceName'];
      var SSIDInfo=namedv.devicename().trim();
      var sqlget="SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model WHERE model.HWMachine='"+Machine+"' AND model.HWModel='"+HWModelStr+"'  ORDER BY RAND() LIMIT 1";
      const info =await db.sequelize.query(sqlget,{nest: true,type:Sequelize.SELECT});
      if(info==""){
        res.status(200).send("Fail");
-       //khi không get dc info
      }else{
        var ProductVersion=info[0]["ProductVersion"];
        ProductVersion=ProductVersion.toString();
@@ -386,7 +374,7 @@ exports.getoldDevice=async(req, res) => {
        "IDFV":generateUUID().toUpperCase(),
        "IDFA":generateUUID().toUpperCase(),
        "adidOld":idfa.toUpperCase(),
-       "idfvOld":idfv.toUpperCase(),
+       "idfvOld":generateUUID().toUpperCase(),
        "AllowYouTube": "1", //random
        "AllowYouTubePlugin": "1",//random
        "AmountDataAvailable":Math.floor((Math.random() * 100000000000) + 10000000000),
@@ -475,3 +463,29 @@ exports.getoldDevice=async(req, res) => {
    //   res.status(200).send("Fail");
    // }
  };
+exports.conver=async(req,res)=>{
+  while(true){
+    var sql="SELECT `id`,`device`,`date`,`network`,country FROM `olddevice` ORDER BY RAND() LIMIT 1";
+     const old=await db.sequelize.query(sql,{nest: true,type:Sequelize.SELECT});
+     if(old!=""){
+       var id=old[0]['id'];
+      var sqldelete="DELETE FROM `olddevice` WHERE `id`="+id;
+       await db.sequelize.query(sqldelete,{nest: true,type:Sequelize.QueryTypes.DELETE});
+     }
+     var device=old[0]['device'];
+     var deviceit=device.split('||');
+     var DeviceName=deviceit[0];
+     var HWModelStr=deviceit[15];
+     var idfaOld=deviceit[9];
+     var SerialNumber=deviceit[27];
+     var HWMachine=deviceit[10];
+     var date=old[0]['date'];
+     var date_string = date.toLocaleDateString("zh-CN");
+     var network=old[0]['network'];
+     var country=old[0]['country'];
+        await db.sequelize.query("INSERT INTO `olddevice_conver`(`HWMachine`, `SerialNumber`, `DeviceName`, `HWModelStr`, `idfaOld`, `date`, `country`, `network`) VALUES ('"+HWMachine+"','"+SerialNumber+"','"+DeviceName+"','"+HWModelStr+"','"+idfaOld+"','"+date_string+"','"+country+"','"+network+"')",
+     { type: Sequelize.QueryTypes.INSERT });
+     
+  }
+  
+}
