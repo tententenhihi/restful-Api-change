@@ -222,8 +222,8 @@ function getcpu(HWModelStr){
 exports.getoldDevice=async(req, res) => {
     var UDID=getUDID();
     var ip = req.clientIp;
-    let networdbody=req.headers["network"];
-    let appid=req.headers["bundle"];
+    let networdbody=req.body.Network;
+    let appid=req.body.Bundle;
      if (ip.substr(0, 7) == "::ffff:") {
        ip = ip.substr(7)
      }
