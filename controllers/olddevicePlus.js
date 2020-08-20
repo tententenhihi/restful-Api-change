@@ -229,7 +229,7 @@ exports.getoldDevice=async(req, res) => {
      }
      var options = {
        host: 'pro.ip-api.com',
-       path: '/json/'+'27.138.8.227'+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+       path: '/json/'+ip+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
      }
      var rs=await timezone.timezone(options);
     if(rs["status"]=="fail"){
