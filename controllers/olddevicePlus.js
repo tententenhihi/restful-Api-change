@@ -503,6 +503,6 @@ date_string=date_string.replace('/','-').replace('/','-');
  var network=req.body.network;
  var sql="INSERT INTO `olddevice_conver` (`HWMachine`, `SerialNumber`, `DeviceName`, `HWModelStr`, `idfaOld`, `date`, `country`, `network`) VALUES ('"+HWMachine+"','"+SerialNumber+"','"+devicename+"','"+HWModel+"','"+idfaOld+"','"+date+"','"+country+"','"+network+"')";
  await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
-       res.status(200).send(results);
+       res.status(200).send("Success");
    });
 }
