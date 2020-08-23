@@ -463,29 +463,46 @@ exports.getoldDevice=async(req, res) => {
    //   res.status(200).send("Fail");
    // }
  };
-exports.conver=async(req,res)=>{
-  while(true){
-    var sql="SELECT `id`,`device`,`date`,`network`,country FROM `olddevice` ORDER BY RAND() LIMIT 1";
-     const old=await db.sequelize.query(sql,{nest: true,type:Sequelize.SELECT});
-     if(old!=""){
-       var id=old[0]['id'];
-      var sqldelete="DELETE FROM `olddevice` WHERE `id`="+id;
-       await db.sequelize.query(sqldelete,{nest: true,type:Sequelize.QueryTypes.DELETE});
-     }
-     var device=old[0]['device'];
-     var deviceit=device.split('||');
-     var DeviceName=deviceit[0];
-     var HWModelStr=deviceit[15];
-     var idfaOld=deviceit[9];
-     var SerialNumber=deviceit[27];
-     var HWMachine=deviceit[10];
-     var date=old[0]['date'];
-     var date_string = date.toLocaleDateString("zh-CN");
-     var network=old[0]['network'];
-     var country=old[0]['country'];
-        await db.sequelize.query("INSERT INTO `olddevice_conver`(`HWMachine`, `SerialNumber`, `DeviceName`, `HWModelStr`, `idfaOld`, `date`, `country`, `network`) VALUES ('"+HWMachine+"','"+SerialNumber+"','"+DeviceName+"','"+HWModelStr+"','"+idfaOld+"','"+date_string+"','"+country+"','"+network+"')",
-     { type: Sequelize.QueryTypes.INSERT });
+// exports.conver=async(req,res)=>{
+//   while(true){
+//     var sql="SELECT `id`,`device`,`date`,`network`,country FROM `olddevice` ORDER BY RAND() LIMIT 1";
+//      const old=await db.sequelize.query(sql,{nest: true,type:Sequelize.SELECT});
+//      if(old!=""){
+//        var id=old[0]['id'];
+//       var sqldelete="DELETE FROM `olddevice` WHERE `id`="+id;
+//        await db.sequelize.query(sqldelete,{nest: true,type:Sequelize.QueryTypes.DELETE});
+//      }
+//      var device=old[0]['device'];
+//      var deviceit=device.split('||');
+//      var DeviceName=deviceit[0];
+//      var HWModelStr=deviceit[15];
+//      var idfaOld=deviceit[9];
+//      var SerialNumber=deviceit[27];
+//      var HWMachine=deviceit[10];
+//      var date=old[0]['date'];
+//      var date_string = date.toLocaleDateString("zh-CN");
+//      var network=old[0]['network'];
+//      var country=old[0]['country'];
+//         await db.sequelize.query("INSERT INTO `olddevice_conver`(`HWMachine`, `SerialNumber`, `DeviceName`, `HWModelStr`, `idfaOld`, `date`, `country`, `network`) VALUES ('"+HWMachine+"','"+SerialNumber+"','"+DeviceName+"','"+HWModelStr+"','"+idfaOld+"','"+date_string+"','"+country+"','"+network+"')",
+//      { type: Sequelize.QueryTypes.INSERT });
      
-  }
+//   }
   
+// }
+exports.postoldDevice=async(req, res) => {
+ var HWMachine=req.body.HWMachine;
+ var SerialNumber=req.body.SerialNumber;
+ var devicename=req.body.devicename;
+ var HWModel=req.body.HWModel;
+ var idfaOld=req.body.idfaOld;
+ var d = new Date();
+ var date_string = d.toLocaleDateString("zh-CN");
+date_string=date_string.replace('/','-').replace('/','-');
+ var date=date_string;
+ var country=req.body.country;
+ var network=req.body.network;
+ var sql="INSERT INTO `olddevice_conver` (`HWMachine`, `SerialNumber`, `DeviceName`, `HWModelStr`, `idfaOld`, `date`, `country`, `network`) VALUES ('"+HWMachine+"','"+SerialNumber+"','"+devicename+"','"+HWModel+"','"+idfaOld+"','"+date+"','"+country+"','"+network+"')";
+ await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
+       res.status(200).send(results);
+   });
 }

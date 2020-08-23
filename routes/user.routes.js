@@ -27,12 +27,10 @@ module.exports =  function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
-  app.get("/api/ssh",
-  [authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-  controller.getssh);
+  app.get("/api/ssh",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.getssh);
    app.get("/api/fakeinfo",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.SELECT);
-   app.post("/api/fakeinfo/PostoldDevice",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.createoldDevice);
-   app.get("/api/fakeinfo/conver",controllerOlddevice.conver);
+   app.post("/api/fakeinfo/PostoldDevice",controllerOlddevice.postoldDevice);
+   //app.get("/api/fakeinfo/conver",controllerOlddevice.conver);
    app.get("/api/fakeinfo/oldDevice",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controllerOlddevice.getoldDevice);
 
 };
