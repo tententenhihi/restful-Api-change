@@ -231,10 +231,10 @@ function getcpu(HWModelStr){
       case "iPhone10,3":
       case "iPhone10,4":
       case "iPhone10,5":
-      case "iPhone10,6":
-        cpu = "armv7";
+        cpu = "arm64";
         break;
       case "iPhone11,8":
+      case "iPhone10,6":
       case "iPhone12,1":
       case "iPhone12,8":
       case "iPhone11,2":
@@ -242,9 +242,9 @@ function getcpu(HWModelStr){
       case "iPhone12,3":
       case "iPhone12,5":
       case "iPhone11,4": 
-        cpu="arm64";
+        cpu="arm64e";
       default: 
-      cpu = "arm64";
+      cpu = "arm64e";
 
   }
   return cpu;
