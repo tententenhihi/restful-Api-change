@@ -30,22 +30,7 @@ exports.allAccess = (req, res) => {
     res.status(200).send("Moderator Content.");
   };
 
-  exports.getssh = (req, res) => {
-    const User = db.sequelize.define("svssh", {
-      username: {
-        type: db.Sequelize.STRING
-      },
-      email: {
-        type: db.Sequelize.STRING
-      },
-      password: {
-        type: db.Sequelize.STRING
-      }
-    });
-    User.findAll().then(function(User) {
-      res.status(200).send(User);
-    });
-  };
+  
   function h2d(s) {
 
     function add(x, y) {
@@ -318,7 +303,7 @@ function getcpu(HWModelStr){
       }
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+ip+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+        path: '/json/'+"116.109.36.129"+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
