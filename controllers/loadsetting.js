@@ -3,7 +3,7 @@ const Sequelize = require("sequelize");
 const { micro } = require("./updatemicro");
 const { and } = require("sequelize");
 exports.loadsetting = async (req, res) => {
-    let username = req.body.username;
+    let username = req.headers["username"];
     const setting = await db.sequelize.query(
         "SELECT *,REPLACE(`setting`,'\\r\\n','!!') FROM `serial` JOIN `members` ON serial.mod=members.userName WHERE members.userName='" + username + "'",
         {
