@@ -55,12 +55,13 @@ exports.putsetting = async (req, res) => {
     let serial = req.body.serial;
     let proxy = req.body.proxy;
     let setting = req.body.setting;
+    let offer=req.body.offer;
     let ssh = req.body.ssh;
     let vip72 = req.body.vip72;
     let ban = req.body.ban;
     let micro = req.body.micro;
     const [results, metadata] = await db.sequelize.query(
-        "UPDATE `serial` SET `setting`='" + setting + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'",
+        "UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'",
         {
             nest: true,
             type: Sequelize.QueryTypes.update
