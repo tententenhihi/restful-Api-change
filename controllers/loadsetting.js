@@ -16,6 +16,8 @@ exports.loadsetting = async (req, res) => {
     setting.forEach(element => {
         var ban = element['ban'];
         var loadsetting = element["REPLACE(`setting`,'\\r\\n','!!')"];
+        var ipdevice=element["ip_device"];
+        var offer=element["offer"];
         var serial = element["serial"];
         var device = element["modem_phone"];
         var ssh = element["ssh"];
@@ -25,7 +27,9 @@ exports.loadsetting = async (req, res) => {
         var data;
         if (ban[0]['ban'] != "0") {
             data = ({
+                "ip":ipdevice,
                 "device": device,
+                "offer":offer,
                 "serial": serial,
                 "setting": loadsetting,
                 "proxy": proxy,
