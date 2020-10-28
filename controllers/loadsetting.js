@@ -16,6 +16,7 @@ exports.loadsetting = async (req, res) => {
     setting.forEach(element => {
         var ban = element['ban'];
         var loadsetting = element["REPLACE(`setting`,'\\r\\n','!!')"];
+        var loadsetting1 = element["setting"];
         var ipdevice=element["ip_device"];
         var offer=element["offer"];
         var serial = element["serial"];
@@ -31,7 +32,7 @@ exports.loadsetting = async (req, res) => {
                 "device": device,
                 "offer":offer,
                 "serial": serial,
-                "setting": loadsetting,
+                "setting": loadsetting1,
                 "proxy": proxy,
                 "micro": micro,
                 "ssh": ssh,
