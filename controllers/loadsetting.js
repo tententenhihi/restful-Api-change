@@ -25,6 +25,7 @@ exports.loadsetting = async (req, res) => {
         var vip72 = element["vip72"];
         var micro = element["micro"]
         var proxy = element["proxy"];
+        var note=element["note"];
         var data;
         if (ban[0]['ban'] != "0") {
             data = ({
@@ -37,6 +38,7 @@ exports.loadsetting = async (req, res) => {
                 "micro": micro,
                 "ssh": ssh,
                 "vip72": vip72,
+                "note":note,
                 "active": "yes"
             });
         } else {
