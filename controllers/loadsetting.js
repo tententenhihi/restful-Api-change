@@ -53,7 +53,21 @@ exports.loadsetting = async (req, res) => {
 
     res.status(200).send(array);
 };
-
+exports.getmicro=async(req,res)=>{
+    let userkey = req.headers["userkey"];
+    const micro = await db.sequelize.query(
+        "SELECT * FROM `micro` WHERE `userkey`='"+userkey+"'",
+        {
+            nest: true,
+            type: Sequelize.SELECT
+        }
+    );
+    var mang=[];
+    micro.forEach(element => {
+        mang.push(element["thongtin"]);
+    });
+    res.status(200).send(mang);
+}
 exports.putsetting = async (req, res) => {
     let serial = req.body.serial;
     let proxy = req.body.proxy;
