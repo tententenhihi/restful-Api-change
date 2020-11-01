@@ -54,9 +54,9 @@ exports.loadsetting = async (req, res) => {
     res.status(200).send(array);
 };
 exports.getmicro=async(req,res)=>{
-    let userkey = req.headers["userkey"];
+    //let userkey = req.headers["userkey"];
     const micro = await db.sequelize.query(
-        "SELECT * FROM `micro` WHERE `userkey`='"+userkey+"'",
+        "SELECT * FROM `micro`",
         {
             nest: true,
             type: Sequelize.SELECT
@@ -64,7 +64,7 @@ exports.getmicro=async(req,res)=>{
     );
     var mang=[];
     micro.forEach(element => {
-        mang.push(element["thongtin"]);
+        mang.push(element["userkey"]+":"+element["thongtin"]);
     });
     res.status(200).send(mang);
 }
