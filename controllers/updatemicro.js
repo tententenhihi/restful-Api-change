@@ -69,7 +69,7 @@ exports.micro = async (req, res) => {
           var vt2=element2.split(':')[1];
           if(vt2>vt1){
             for(var i=0;i<=vt2-vt1;i++){
-              arraygeo.push(eval(vt1+i)+':'+element1);
+              arraygeo.push(parseInt(vt1)+parseInt(i)+':'+element1);
             }
           }else{
             arraygeo.push(element2.split(':')[0]+':'+element1);
