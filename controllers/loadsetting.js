@@ -64,7 +64,7 @@ exports.getmicro=async(req,res)=>{
     );
     var mang=[];
     micro.forEach(element => {
-        mang.push(element["userkey"]+":"+element["thongtin"]);
+        mang.push(element["userkey"]+":"+element["thongtin"]+":"+element["apikey"]);
     });
     res.status(200).send(mang);
 }
