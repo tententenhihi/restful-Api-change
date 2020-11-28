@@ -1,7 +1,5 @@
 const db = require("../models");
 const Sequelize = require("sequelize");
-const { micro } = require("./updatemicro");
-const { and } = require("sequelize");
 exports.loadsetting = async (req, res) => {
     let username = req.headers["username"];
     const setting = await db.sequelize.query(
@@ -78,12 +76,13 @@ exports.putsetting = async (req, res) => {
     let vip72 = req.body.vip72;
     let note = req.body.note;
     let micro = req.body.micro;
-     await db.sequelize.query(
-        "UPDATE `serial` SET `note`='" + note + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'",
-        {
-            nest: true,
-            type: Sequelize.QueryTypes.update
-        }
-    );
+    //  await db.sequelize.query(
+    //     "UPDATE `serial` SET `note`='" + note + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'",
+    //     {
+    //         nest: true,
+    //         type: Sequelize.QueryTypes.update
+    //     }
+    // );
+    await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'")
     res.status(200).send("success");
 }
