@@ -66,6 +66,34 @@ exports.getmicro=async(req,res)=>{
     });
     res.status(200).send(mang);
 }
+
+exports.postSetting = async (req, res) => {
+    let mod=req.body.mod;
+    let serial = req.body.serial;
+    let proxy = req.body.proxy;
+    let setting = req.body.setting;
+    let ip_device=req.body.ip_device;
+    let offer=req.body.offer;
+    let ssh = req.body.ssh;
+    let vip72 = req.body.vip72;
+    let note = req.body.note;
+    let micro = req.body.micro;
+    const result = await db.sequelize.query(
+        "SELECT * FROM `serial` WHERE `serial`='"+serial+"' and `mod`='"+mod+"'",
+        {
+            nest: true,
+            type: Sequelize.SELECT
+        }
+    );
+    var ip=result[0]['ip_device'];
+    if(ip!=null&&ip!=""){
+        var sql="INSERT INTO `serial` (`ip_device`, `serial`, `mod`, `offer`, `setting`, `proxy`, `ban`, `micro`, `modem_phone`, `ssh`, `vip72`, `note`) VALUES ('"+ip_device+"', '"+serial+"', '"+mod+"', '"+offer+"', '"+setting+"', '"+proxy+"', b'1', '"+micro+"', 'iphone 6s', '"+ssh+"', '"+vip72+"', '"+note+"');";
+        await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
+       res.status(200).send("Success");
+         });
+    }
+   
+}
 exports.putsetting = async (req, res) => {
     let mod=req.body.mod;
     let serial = req.body.serial;
