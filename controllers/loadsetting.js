@@ -85,15 +85,19 @@ exports.postSetting = async (req, res) => {
             type: Sequelize.SELECT
         }
     );
-    var ip=result[0]['ip_device'];
-    if(ip!=null&&ip!=""){
+    try{
+        var ip=result[0]['ip_device'];
+        res.status(204).send("Error");
+    }catch{
         var sql="INSERT INTO `serial` (`ip_device`, `serial`, `mod`, `offer`, `setting`, `proxy`, `ban`, `micro`, `modem_phone`, `ssh`, `vip72`, `note`) VALUES ('"+ip_device+"', '"+serial+"', '"+mod+"', '"+offer+"', '"+setting+"', '"+proxy+"', b'1', '"+micro+"', 'iphone 6s', '"+ssh+"', '"+vip72+"', '"+note+"');";
         await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
        res.status(200).send("Success");
          });
-    }else{
-        res.status(204).send("Error");
     }
+   
+
+       
+
    
 }
 exports.putsetting = async (req, res) => {
