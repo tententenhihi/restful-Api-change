@@ -67,6 +67,7 @@ exports.getmicro=async(req,res)=>{
     res.status(200).send(mang);
 }
 exports.putsetting = async (req, res) => {
+    let mod=req.body.mod;
     let serial = req.body.serial;
     let proxy = req.body.proxy;
     let setting = req.body.setting;
@@ -83,6 +84,6 @@ exports.putsetting = async (req, res) => {
     //         type: Sequelize.QueryTypes.update
     //     }
     // );
-    await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'")
+    await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'")
     res.status(200).send("success");
 }
