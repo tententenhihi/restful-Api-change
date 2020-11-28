@@ -91,6 +91,8 @@ exports.postSetting = async (req, res) => {
         await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
        res.status(200).send("Success");
          });
+    }else{
+        res.status(204).send("Error");
     }
    
 }

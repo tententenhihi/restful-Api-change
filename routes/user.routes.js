@@ -33,6 +33,7 @@ module.exports =  function(app) {
   app.get("/api/ssh",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controllerssh.getssh);
   app.get("/api/setting",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller_load_setting.loadsetting);
   app.post("/api/putsetting",controller_load_setting.putsetting);
+  app.post("/api/postsetting",controller_load_setting.postSetting);
   app.get("/api/micro",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller_micro.micro);
   app.get("/api/fakeinfo",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.SELECT);
   app.post("/api/fakeinfo/PostoldDevice",controllerOlddevice.postoldDevice);
