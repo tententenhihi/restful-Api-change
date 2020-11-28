@@ -78,12 +78,12 @@ exports.putsetting = async (req, res) => {
     let vip72 = req.body.vip72;
     let note = req.body.note;
     let micro = req.body.micro;
-    const [results, metadata] = await db.sequelize.query(
-        "UPDATE `serial` SET `note`='" + note + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'",
-        {
-            nest: true,
-            type: Sequelize.QueryTypes.update
-        }
-    );
+    // const [results, metadata] = await db.sequelize.query(
+    //     "UPDATE `serial` SET `note`='" + note + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'",
+    //     {
+    //         nest: true,
+    //         type: Sequelize.QueryTypes.update
+    //     }
+    // );
     res.status(200).send("success");
 }
