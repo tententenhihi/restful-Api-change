@@ -30,6 +30,7 @@ exports.loadsetting = async (req, res) => {
                 "ip":ipdevice,
                 "device": device,
                 "offer":offer,
+                "mod":username,
                 "serial": serial,
                 "setting": loadsetting1,
                 "proxy": proxy,
