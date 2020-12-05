@@ -121,3 +121,31 @@ exports.putsetting = async (req, res) => {
     await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'")
     res.status(200).send("success");
 }
+
+exports.put_allSetting = async (req, res) => {
+    let mod=req.body.mod;
+    let serial = req.body.serial;
+    
+
+    const result_get_serial = await db.sequelize.query(
+        "SELECT * FROM `serial` WHERE `serial`='"+serial+"' and `mod`='"+mod+"'",
+        {
+            nest: true,
+            type: Sequelize.SELECT
+        }
+    );
+
+    const result_get_list = await db.sequelize.query(
+        "SELECT * FROM `serial` WHERE `mod`='"+mod+"'",
+        {
+            nest: true,
+            type: Sequelize.SELECT
+        }
+    );
+        var setting=result_get_serial[0]["setting"];
+        var offer=result_get_serial[0]["offer"];
+       result_get_list.forEach(element=>{
+        await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" + element["serial"] + "' and `ban`='1'")
+       });
+     res.status(200).send("success");
+}
