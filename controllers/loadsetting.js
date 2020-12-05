@@ -146,7 +146,9 @@ exports.put_allSetting = async (req, res) => {
         var setting=result_get_serial[0]["setting"];
         var offer=result_get_serial[0]["offer"];
        result_get_list.forEach(element=>{
-        await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" + element["serial"] + "' and `ban`='1'")
+           var serialll=element["serial"];
+           console.log(serialll);
+        await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" +serialll + "' and `ban`='1'")
        });
      res.status(200).send("success");
 }
