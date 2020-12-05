@@ -137,7 +137,7 @@ exports.put_allSetting = async (req, res) => {
     );
 
     const result_get_list = await db.sequelize.query(
-        "SELECT * FROM `serial` WHERE `mod`='"+mod+"'",
+        "SELECT * FROM `serial` WHERE `mod`='"+mod+"'and `serial`='"+serial+"' ",
         {
             nest: true,
             type: Sequelize.SELECT
@@ -145,6 +145,7 @@ exports.put_allSetting = async (req, res) => {
     );
         var setting=result_get_serial[0]["setting"];
         var offer=result_get_serial[0]["offer"];
+        console.log(setting);
        result_get_list.forEach(element=>{
            var serialll=element["serial"];
            console.log(serialll);
