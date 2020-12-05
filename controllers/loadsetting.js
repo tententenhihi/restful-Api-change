@@ -112,13 +112,6 @@ exports.putsetting = async (req, res) => {
     let vip72 = req.body.vip72;
     let note = req.body.note;
     let micro = req.body.micro;
-    //  await db.sequelize.query(
-    //     "UPDATE `serial` SET `note`='" + note + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'",
-    //     {
-    //         nest: true,
-    //         type: Sequelize.QueryTypes.update
-    //     }
-    // );
     await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'")
     res.status(200).send("success");
 }
@@ -146,10 +139,10 @@ exports.put_allSetting = async (req, res) => {
         var setting=result_get_serial[0]["setting"];
         var offer=result_get_serial[0]["offer"];
         console.log(setting);
-       result_get_list.forEach(element=>{
-           var serialll=element["serial"];
-           console.log(serialll);
-      //  await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" +serialll + "' and `ban`='1'");
-       });
+    //    result_get_list.forEach(element=>{
+    //        var serialll=element["serial"];
+    //        console.log(serialll);
+    //   //  await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" +serialll + "' and `ban`='1'");
+    //    });
      res.status(200).send("success");
 }
