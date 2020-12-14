@@ -146,3 +146,11 @@ exports.put_allSetting = async (req, res) => {
         });
      res.status(200).send("success");
 }
+exports.delete_setting =async (req, res) => {
+    let mod=req.body.mod;
+    let serial = req.body.serial;
+    var xoa="DELETE FROM `serial` WHERE `serial`='"+serial+"' AND `mod`='"+mod+"'";
+    await db.sequelize.query(xoa,{nest: true,type:Sequelize.QueryTypes.DELETE});
+    res.status(200).send("success");
+
+};
