@@ -36,7 +36,7 @@ module.exports =  function(app) {
   app.post("/api/putsetting",controller_load_setting.putsetting);
   app.post("/api/postsetting",controller_load_setting.postSetting);
   app.post("/api/set_all_setting",controller_load_setting.put_allSetting);
-  app.get("/api/deleteSetting",controller_load_setting.delete_setting);
+  app.post("/api/deleteSetting",controller_load_setting.delete_setting);
   app.get("/api/micro",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller_micro.micro);
   app.get("/api/fakeinfo",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller.SELECT);
   app.post("/api/fakeinfo/PostoldDevice",controllerOlddevice.postoldDevice);
