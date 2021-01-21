@@ -301,6 +301,7 @@ function getcpu(HWModelStr){
       // if (ip.substr(0, 7) == "::ffff:") {
       //   ip = ip.substr(7)
       // }
+      console.log(ip);
       var options = {
         host: 'pro.ip-api.com',
         path: '/json/'+ip+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
