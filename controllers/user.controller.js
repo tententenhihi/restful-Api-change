@@ -296,14 +296,15 @@ function getcpu(HWModelStr){
     var NetworkType=random3g4g();
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
-      var ip = req.clientIp;
+   var ip=req.body.clientIp;
+      // var ip = req.clientIp;
       
-      if (ip.substr(0, 7) == "::ffff:") {
-        ip = ip.substr(7)
-      }
+      // if (ip.substr(0, 7) == "::ffff:") {
+      //   ip = ip.substr(7)
+      // }
       var options = {
         host: 'pro.ip-api.com',
-        path: '/json/'+"116.109.36.129"+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+        path: '/json/'+ip+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
       }
      var rs=await timezone.timezone(options);
      if(rs["status"]=="fail"){
