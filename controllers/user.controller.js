@@ -297,6 +297,7 @@ function getcpu(HWModelStr){
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
    var ip=req.body.clientIp;
+   console.log(ip);
    if(ip==""){
       ip = req.clientIp;
       if (ip.substr(0, 7) == "::ffff:") {
