@@ -297,10 +297,13 @@ function getcpu(HWModelStr){
     var FK_IMEI = imei_gen();
    var dl= dungluongmacdinh(ProductType);
    var ip=req.body.clientIp;
-      // var ip = req.clientIp;
-      // if (ip.substr(0, 7) == "::ffff:") {
-      //   ip = ip.substr(7)
-      // }
+   if(ip==""){
+      ip = req.clientIp;
+      if (ip.substr(0, 7) == "::ffff:") {
+        ip = ip.substr(7)
+      }
+   }
+      
       var options = {
         host: 'pro.ip-api.com',
         path: '/json/'+ip+'?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
