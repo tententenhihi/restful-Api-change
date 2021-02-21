@@ -14,7 +14,6 @@ const timezone = require("../timezone");
 const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 const sentMail = require('../mailOptions');
-const { null } = require("is_js");
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
