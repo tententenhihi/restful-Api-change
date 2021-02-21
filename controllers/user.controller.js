@@ -240,35 +240,36 @@ exports.SELECT = async (req, res) => {
   var ip = req.body.clientIp;
   var deviceinfo = req.body.device;
   var os = req.body.os;
-  var sql="";
-  if (deviceinfo === undefined&& os === undefined) {
-    sql='SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
-  }else{
-    sql="SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where os.OSVersion like '%"+os+"%' and model.HWMachine='"+deviceinfo+"' ORDER BY RAND() LIMIT 1";
+  var sql = "";
+  if (deviceinfo === undefined && os === undefined) {
+    sql = 'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
+  } else {
+    sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where os.OSVersion like '%" + os + "%' and model.HWMachine='" + deviceinfo + "' ORDER BY RAND() LIMIT 1";
   }
   var UDID = getUDID();
-  
+
   const info = await db.sequelize.query(
-      sql,
-      {
-        nest: true,
-        type: Sequelize.SELECT
-      }
-    );
- if(info.length===0){
-  var sqlnew='SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
-  info = await db.sequelize.query(
-    sqlnew,
+    sql,
     {
       nest: true,
       type: Sequelize.SELECT
     }
   );
- }
-  
-    
-  
-  
+  if (info.length === 0) {
+    var sqlnew = 'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
+    info = await db.sequelize.query(
+      sqlnew,
+      {
+        nest: true,
+        type: Sequelize.SELECT
+      }
+    );
+
+  }
+
+
+
+
   var getserial = serial();
   var name = namedv.namedevice().trim();
   var SSIDInfo = namedv.devicename().trim();
@@ -319,14 +320,14 @@ exports.SELECT = async (req, res) => {
   var NetworkType = random3g4g();
   var FK_IMEI = imei_gen();
   var dl = dungluongmacdinh(ProductType);
- 
+
   if (ip == "undefined" || ip == null) {
     ip = req.clientIp;
     if (ip.substr(0, 7) == "::ffff:") {
       ip = ip.substr(7)
     }
   }
-  
+
   var options = {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
