@@ -252,7 +252,7 @@ exports.SELECT = async (req, res) => {
   console.log(sql);
   console.log("--------------------");
   var UDID = getUDID();
-  var info="";
+  const info=[];
   try
   {
     info = await db.sequelize.query(
