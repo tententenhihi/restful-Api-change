@@ -260,13 +260,13 @@ exports.SELECT = async (req, res) => {
    console.log("--------------");
   console.log(sql);
   console.log("--------------");
-  const info = await db.sequelize.query(
-    sql,
-    {
-      nest: true,
-      type: Sequelize.SELECT
-    }
-  );
+  //  info = await db.sequelize.query(
+  //   sql,
+  //   {
+  //     nest: true,
+  //     type: Sequelize.SELECT
+  //   }
+  // );
  }
   
     
