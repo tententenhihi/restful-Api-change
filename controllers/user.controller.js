@@ -256,7 +256,7 @@ exports.SELECT = async (req, res) => {
       }
     );
     console.log("----------");
-    console.log(info);
+    console.log(info.length);
     console.log("----------");
  if(info.length==0){
   info = await db.sequelize.query(
