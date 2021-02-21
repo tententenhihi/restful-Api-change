@@ -259,8 +259,8 @@ exports.SELECT = async (req, res) => {
         type: Sequelize.SELECT
       }
     );
-    
- if(info.length==0){
+  console.log(info.length);
+ if(info.length===0){
   info = await db.sequelize.query(
     'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1',
     {
