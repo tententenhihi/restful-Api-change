@@ -260,7 +260,7 @@ exports.SELECT = async (req, res) => {
    console.log("--------------");
   console.log(sql);
   console.log("--------------");
-   info = await db.sequelize.query(
+  const info = await db.sequelize.query(
     sql,
     {
       nest: true,
