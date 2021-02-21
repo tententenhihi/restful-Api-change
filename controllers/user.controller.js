@@ -14,6 +14,7 @@ const timezone = require("../timezone");
 const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 const sentMail = require('../mailOptions');
+const { null } = require("is_js");
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
@@ -251,7 +252,7 @@ exports.SELECT = async (req, res) => {
   console.log(sql);
   console.log("--------------------");
   var UDID = getUDID();
-  const info;
+  const info=null;
   try
   {
     info = await db.sequelize.query(
