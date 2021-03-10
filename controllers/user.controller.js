@@ -14,6 +14,8 @@ const timezone = require("../timezone");
 const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 const sentMail = require('../mailOptions');
+const publicIp = require('public-ip');
+
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
@@ -330,11 +332,21 @@ exports.SELECT = async (req, res) => {
       ip = ip.substr(7)
     }
   }
-
+ 
   var options = {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
+
+ var ipv6= (async () => {
+    await publicIp.v6({
+      fallbackUrls: [
+        ip
+      ]
+    });
+  })();
+
+
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
@@ -432,6 +444,7 @@ exports.SELECT = async (req, res) => {
       "ResolutionHeight": ResolutionHeight,
       "ResolutionWidth": ResolutionWidth,
       "DeviceBatteryState":random.int(1,3),
+      "ipv6":ipv6,
       "Timezone": {
         "Myip:": ip,
         "city": city,
