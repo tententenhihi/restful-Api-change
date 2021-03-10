@@ -337,19 +337,8 @@ exports.SELECT = async (req, res) => {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
-
-  if (ipaddr.isValid(ip)) {
-    try {
-        var addr = ipaddr.parse(ip);
-        if (ipaddr.IPv6.isValid(ip) && addr.isIPv4MappedAddress()) {
-          console.log(addr.toIPv4Address().toString());
-        }
-        console.log(addr.toNormalizedString());
-    } catch (e) {
-      console.log(ip);
-        
-    }
-}
+  var addr = ipaddr.parse(ip);
+  console.log(addr.toIPv4Address().toString());
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
