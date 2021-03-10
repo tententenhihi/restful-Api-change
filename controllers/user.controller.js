@@ -338,6 +338,7 @@ exports.SELECT = async (req, res) => {
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
   var addr = ipaddr.parse(ip);
+  console.log(ip);
   console.log(addr);
   console.log(addr.toIPv4Address().toString());
   var rs = await timezone.timezone(options);
