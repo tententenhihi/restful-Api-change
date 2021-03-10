@@ -153,6 +153,7 @@ function random3g4g() {
 function full_IPv6 (ip_string) {
   // replace ipv4 address if any
   var ipv4 = ip_string.match(/(.*:)([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$)/);
+  console.log(ipv4);
   if (ipv4) {
       var ip_string = ipv4[1];
       ipv4 = ipv4[2].match(/[0-9]+/g);
