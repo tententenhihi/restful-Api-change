@@ -440,7 +440,6 @@ exports.SELECT = async (req, res) => {
       "ResolutionHeight": ResolutionHeight,
       "ResolutionWidth": ResolutionWidth,
       "DeviceBatteryState":random.int(1,3),
-      "ipv6":ipv6,
       "Timezone": {
         "Myip:": ip,
         "city": city,
