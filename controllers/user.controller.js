@@ -337,8 +337,13 @@ exports.SELECT = async (req, res) => {
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
 
- var ipv6=await publicIp.v6(ip);
-
+ var ipv6=(async () => {
+	await publicIp.v6({
+		fallbackUrls: [
+			'https://ifconfig.co/ip'
+		]
+	});
+})();
 console.log(ipv6);
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
