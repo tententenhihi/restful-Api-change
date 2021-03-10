@@ -14,7 +14,8 @@ const timezone = require("../timezone");
 const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 const sentMail = require('../mailOptions');
-const publicIp = require('public-ip');
+var ipaddr = require('ipaddr.js');
+
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
@@ -337,7 +338,18 @@ exports.SELECT = async (req, res) => {
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
 
-  console.log(await publicIp.v6());
+  if (ipaddr.isValid(ip)) {
+    try {
+        var addr = ipaddr.parse(ip);
+        if (ipaddr.IPv6.isValid(ip) && addr.isIPv4MappedAddress()) {
+          console.log(addr.toIPv4Address().toString());
+        }
+        console.log(addr.toNormalizedString());
+    } catch (e) {
+      console.log(ip);
+        
+    }
+}
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
