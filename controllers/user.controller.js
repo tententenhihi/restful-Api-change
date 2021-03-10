@@ -375,7 +375,7 @@ exports.SELECT = async (req, res) => {
 
 
 
-  console.log(full_IPv6(ip));
+  console.log(full_IPv6('171.240.144.65'));
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
