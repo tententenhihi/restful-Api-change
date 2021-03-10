@@ -7,8 +7,6 @@ const random = require('random');
 const namedv = require("../fake/randomNameDevice");
 const { Console } = require("console");
 const sha1 = require('js-sha1');
-const IPv6 = require("ip-num/IPNumber");
-const IPv4  = require("ip-num/IPNumber");
 const requestIp = require('request-ip');
 const https = require('http');
 const timezone = require("../timezone");
@@ -152,7 +150,42 @@ function random3g4g() {
   } 
   return chon;
 }
+function full_IPv6 (ip_string) {
+  // replace ipv4 address if any
+  var ipv4 = ip_string.match(/(.*:)([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$)/);
+  if (ipv4) {
+      var ip_string = ipv4[1];
+      ipv4 = ipv4[2].match(/[0-9]+/g);
+      for (var i = 0;i < 4;i ++) {
+          var byte = parseInt(ipv4[i],10);
+          ipv4[i] = ("0" + byte.toString(16)).substr(-2);
+      }
+      ip_string += ipv4[0] + ipv4[1] + ':' + ipv4[2] + ipv4[3];
+  }
 
+  // take care of leading and trailing ::
+  ip_string = ip_string.replace(/^:|:$/g, '');
+
+  var ipv6 = ip_string.split(':');
+
+  for (var i = 0; i < ipv6.length; i ++) {
+      var hex = ipv6[i];
+      if (hex != "") {
+          // normalize leading zeros
+          ipv6[i] = ("0000" + hex).substr(-4);
+      }
+      else {
+          // normalize grouped zeros ::
+          hex = [];
+          for (var j = ipv6.length; j <= 8; j ++) {
+              hex.push('0000');
+          }
+          ipv6[i] = hex.join(':');
+      }
+  }
+
+  return ipv6.join(':');
+}
 function getUDID() {
 
   var imeiConvert = h2d(FK_IMEI);
@@ -338,8 +371,11 @@ exports.SELECT = async (req, res) => {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
-  var ipv6 = IPv6.fromIPv4(new IPv4("74.125.43.99"));
-  console.log(ipv6.toString());
+ 
+
+
+
+  console.log(full_IPv6(ip));
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
