@@ -339,14 +339,10 @@ exports.SELECT = async (req, res) => {
   }
 
  var ipv6= (async () => {
-    await publicIp.v6({
-      fallbackUrls: [
-        ip
-      ]
-    });
+    await publicIp.v6(ip);
   })();
 
-
+console.log(ipv6);
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
