@@ -144,7 +144,7 @@ function random3g4g() {
   var phantram = random.int(0, 100);
   if (phantram <= 70) {
     chon = random.int(1,3);
-  } else if (phantram <= 70 && phantram > 100) {
+  } else if (phantram >70&& phantram <= 100) {
     chon = 5;
   } 
   return chon;
