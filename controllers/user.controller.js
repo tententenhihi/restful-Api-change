@@ -339,8 +339,8 @@ exports.SELECT = async (req, res) => {
   }
   var addr = ipaddr.parse(ip);
   console.log(ip);
-  console.log(addr);
-  console.log(addr.toIPv4Address().toString());
+  // console.log(addr);
+  // console.log(addr.toIPv4Address().toString());
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
