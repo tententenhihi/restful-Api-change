@@ -139,16 +139,14 @@ function serial() {
   return s;
 }
 function random3g4g() {
-  var array = ["WiFi", "3G", "4G"];
+ // var array = ["1", "2", "3","5"];//wifi 1,2,3 5 
   var chon;
   var phantram = random.int(0, 100);
-  if (phantram <= 50) {
-    chon = array[0];
-  } else if (phantram <= 65 && phantram > 50) {
-    chon = array[1];
-  } else if (phantram > 65 && phantram <= 100) {
-    chon = array[2];
-  }
+  if (phantram <= 70) {
+    chon = random.int(1,3);
+  } else if (phantram <= 70 && phantram > 100) {
+    chon = 5;
+  } 
   return chon;
 }
 
@@ -433,6 +431,7 @@ exports.SELECT = async (req, res) => {
       "ScreenWidth": ScreenWidth,
       "ResolutionHeight": ResolutionHeight,
       "ResolutionWidth": ResolutionWidth,
+      "DeviceBatteryState":random.int(1,3),
       "Timezone": {
         "Myip:": ip,
         "city": city,
