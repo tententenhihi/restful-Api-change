@@ -15,7 +15,6 @@ const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 const sentMail = require('../mailOptions');
 const publicIp = require('public-ip');
-
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
