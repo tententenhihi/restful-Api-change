@@ -7,7 +7,7 @@ const random = require('random');
 const namedv = require("../fake/randomNameDevice");
 const { Console } = require("console");
 const sha1 = require('js-sha1');
-const Ipadress = require("../ip");
+const IPv6 = require("ip-num/IPNumber");
 const requestIp = require('request-ip');
 const https = require('http');
 const timezone = require("../timezone");
@@ -337,12 +337,8 @@ exports.SELECT = async (req, res) => {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
-
-  const addr1 = ipaddr.fromByteArray(ipaddr.parse(ip).toByteArray());
-// => '2001:db8::1'
-  console.log(addr1.toString());
-  // console.log(addr);
-  // console.log(addr.toIPv4Address().toString());
+  var ipv6 = IPv6.fromIPv4(new IPv4("74.125.43.99"));
+  console.log(ipv6.toString());
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
