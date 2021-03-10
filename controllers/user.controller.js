@@ -8,6 +8,7 @@ const namedv = require("../fake/randomNameDevice");
 const { Console } = require("console");
 const sha1 = require('js-sha1');
 const IPv6 = require("ip-num/IPNumber");
+const IPv4  = require("ip-num/IPNumber");
 const requestIp = require('request-ip');
 const https = require('http');
 const timezone = require("../timezone");
