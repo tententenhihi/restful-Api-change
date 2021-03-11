@@ -13,8 +13,6 @@ const timezone = require("../timezone");
 const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 const sentMail = require('../mailOptions');
-var ipaddr = require('ipaddr.js');
-const publicIp = require('public-ip');
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
