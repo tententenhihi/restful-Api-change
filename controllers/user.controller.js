@@ -14,7 +14,7 @@ const { and } = require("sequelize");
 const performance = require('perf_hooks').performance;
 const sentMail = require('../mailOptions');
 var ipaddr = require('ipaddr.js');
-
+const publicIp = require('public-ip');
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
@@ -150,42 +150,17 @@ function random3g4g() {
   } 
   return chon;
 }
-function full_IPv6 (ip_string) {
-  // replace ipv4 address if any
-  var ipv4 = ip_string.match(/(.*:)([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$)/);
-  console.log(ipv4);
-  if (ipv4) {
-      var ip_string = ipv4[1];
-      ipv4 = ipv4[2].match(/[0-9]+/g);
-      for (var i = 0;i < 4;i ++) {
-          var byte = parseInt(ipv4[i],10);
-          ipv4[i] = ("0" + byte.toString(16)).substr(-2);
-      }
-      ip_string += ipv4[0] + ipv4[1] + ':' + ipv4[2] + ipv4[3];
+function toByteArray(parts) {
+  var bytes, part, _i, _len, _ref;
+  bytes = [];
+  _ref = parts;
+  _len = _ref.length;
+  for(_i=0; _i < _len; _i++) {
+      part = _ref[_i];
+      bytes.push(part >> 8);
+      bytes.push(part & 0xff);
   }
-
-  // take care of leading and trailing ::
-  ip_string = ip_string.replace(/^:|:$/g, '');
-
-  var ipv6 = ip_string.split(':');
-
-  for (var i = 0; i < ipv6.length; i ++) {
-      var hex = ipv6[i];
-      if (hex != "") {
-          // normalize leading zeros
-          ipv6[i] = ("0000" + hex).substr(-4);
-      }
-      else {
-          // normalize grouped zeros ::
-          hex = [];
-          for (var j = ipv6.length; j <= 8; j ++) {
-              hex.push('0000');
-          }
-          ipv6[i] = hex.join(':');
-      }
-  }
-
-  return ipv6.join(':');
+  return bytes;
 }
 function getUDID() {
 
@@ -367,16 +342,18 @@ exports.SELECT = async (req, res) => {
       ip = ip.substr(7)
     }
   }
- 
+  // (async () => {
+  //   console.log(await publicIp.v6('171.240.144.65'));
+   
+  // })();
+  
   var options = {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
  
-
-
-
-  console.log(full_IPv6('171.240.144.65'));
+    const addr = ipaddr.fromByteArray(toByteArray(ip));
+  console.log( addr.toString());
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
