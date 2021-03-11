@@ -150,18 +150,7 @@ function random3g4g() {
   } 
   return chon;
 }
-function toByteArray(parts) {
-  var bytes, part, _i, _len, _ref;
-  bytes = [];
-  _ref = parts;
-  _len = _ref.length;
-  for(_i=0; _i < _len; _i++) {
-      part = _ref[_i];
-      bytes.push(part >> 8);
-      bytes.push(part & 0xff);
-  }
-  return bytes;
-}
+
 function getUDID() {
 
   var imeiConvert = h2d(FK_IMEI);
@@ -351,9 +340,6 @@ exports.SELECT = async (req, res) => {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
- 
-    const addr = ipaddr.fromByteArray(toByteArray(ip));
-  console.log( addr.toString());
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
     var data = ({
