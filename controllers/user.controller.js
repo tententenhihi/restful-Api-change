@@ -353,7 +353,7 @@ exports.SELECT = async (req, res) => {
   
   var options = {
     host: 'pro.ip-api.com',
-    path: '/json/' + "123.21.141.79" + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
+    path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
   }
   var rs = await timezone.timezone(options);
   if (rs["status"] == "fail") {
