@@ -406,7 +406,6 @@ exports.SELECT = async (req, res) => {
     var Network = mvcxuly["Network"];
     var bootime = Math.floor(Math.random() * 86400 * 365) + 86400 * 7; 
     var data;
-    await sequelize.close();
     if(TargetApplicationFakeDeviceToken!==undefined&&TargetApplicationFakeUIScreen!==undefined&&TargetApplicationFakeIdentifierForVendor!==undefined&&FakeEnabled!==undefined&&FakeMGCopyAnswer!==undefined&&FakeIOKitAndAppleData!==undefined)
     {
       data = ({
