@@ -89,6 +89,8 @@ exports.micro = async (req, res) => {
         var insert="INSERT INTO `micro`(`userkey`, `apikey`, `thongtin`) VALUES ('"+userapi+"','"+keyapi+"','"+element+"')";
          db.sequelize.query(insert,{nest: true,type:Sequelize.QueryTypes.INSERT});
       });
+
+      sequelize.close();
       //var datadone=({"data":arraygeo})
       res.status(200).send("success");
     }

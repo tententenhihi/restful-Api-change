@@ -49,7 +49,7 @@ exports.loadsetting = async (req, res) => {
         array.push(data);
     });
 
-
+    await sequelize.close();
     res.status(200).send(array);
 };
 exports.getmicro=async(req,res)=>{
@@ -65,6 +65,7 @@ exports.getmicro=async(req,res)=>{
     micro.forEach(element => {
         mang.push(element["userkey"]+":"+element["thongtin"]+":"+element["apikey"]);
     });
+    await sequelize.close();
     res.status(200).send(mang);
 }
 
@@ -92,10 +93,11 @@ exports.postSetting = async (req, res) => {
     }catch{
         var sql="INSERT INTO `serial` (`ip_device`, `serial`, `mod`, `offer`, `setting`, `proxy`, `ban`, `micro`, `modem_phone`, `ssh`, `vip72`, `note`) VALUES ('"+ip_device+"', '"+serial+"', '"+mod+"', '"+offer+"', '"+setting+"', '"+proxy+"', b'1', '"+micro+"', 'iphone 6s', '"+ssh+"', '"+vip72+"', '"+note+"');";
         await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
+            await sequelize.close();
        res.status(200).send("Success");
          });
     }
-   
+    await sequelize.close();
 
        
 
@@ -113,6 +115,7 @@ exports.putsetting = async (req, res) => {
     let note = req.body.note;
     let micro = req.body.micro;
     await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'")
+    await sequelize.close();
     res.status(200).send("success");
 }
 
@@ -144,6 +147,7 @@ exports.put_allSetting = async (req, res) => {
     //        console.log(serialll);
      await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" +serialll + "' and `ban`='1'");
         });
+        await sequelize.close();
      res.status(200).send("success");
 }
 exports.delete_setting =async (req, res) => {
@@ -151,6 +155,7 @@ exports.delete_setting =async (req, res) => {
     let serial = req.body.serial;
     var xoa="DELETE FROM `serial` WHERE `serial`='"+serial+"' AND `mod`='"+mod+"'";
     await db.sequelize.query(xoa,{nest: true,type:Sequelize.QueryTypes.DELETE});
+    await sequelize.close();
     res.status(200).send("success");
 
 };
