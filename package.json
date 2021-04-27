@@ -9,6 +9,7 @@
     "js-sha1": "^0.6.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
+    "node-imap": "^0.9.6",
     "nodemailer": "^6.5.0",
     "public-ip": "^4.0.3",
     "random": "^3.0.3",
