@@ -142,7 +142,7 @@ function random3g4g() {
   var chon;
   var phantram = random.int(0, 100);
   if (phantram <= 70) {
-    chon = random.int(1,3);
+    chon = random.int(2,3);
   } else if (phantram >70&& phantram <= 100) {
     chon = 5;
   } 
@@ -237,6 +237,19 @@ exports.SELECT = async (req, res) => {
   var ip = req.body.clientIp;
   var deviceinfo = req.body.device;
   var os = req.body.os;
+
+
+
+  var TargetApplicationFakeDeviceToken=req.body.TargetApplicationFakeDeviceToken;
+  var TargetApplicationFakeUIScreen=req.body.TargetApplicationFakeUIScreen;
+  var TargetApplicationFakeIdentifierForVendor=req.body.TargetApplicationFakeIdentifierForVendor;
+  
+  var FakeEnabled=req.body.FakeEnabled;
+  var FakeMGCopyAnswer=req.body.FakeMGCopyAnswer;
+  var FakeIOKitAndAppleData=req.body.FakeIOKitAndAppleData;
+
+
+
   var sql = "";
   if (deviceinfo === undefined && os === undefined) {
     sql = 'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
@@ -248,6 +261,10 @@ exports.SELECT = async (req, res) => {
   else {
     sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where os.OSVersion like '%" + os + "%' and model.HWMachine='" + deviceinfo + "' ORDER BY RAND() LIMIT 1";
   }
+
+
+ 
+
   var UDID = getUDID();
 
   const info = await db.sequelize.query(
@@ -387,77 +404,159 @@ exports.SELECT = async (req, res) => {
     var MobileSubscriberCountryCode = mvcxuly["MCC"];
     var MobileSubscriberNetworkCode = mvcxuly["MNC"];
     var Network = mvcxuly["Network"];
-    var bootime = Math.floor(Math.random() * 86400 * 365) + 86400 * 7;
-    var data = ({
-      "SerialNumber": getserial,
-      "DeviceName": name,
-      "UserAssignedDeviceName": name,
-      "ProductVersion": ProductVersion1,
-      "MajorVersion": MajorVersion,
-      "MinorVersion": MinorVersion,
-      "PatchVersion": PatchVersion,
-      "CPUArchitecture": getcpu(ProductType),
-      "HWModelStr": HWModelStr,
-      "HardwarePlatform": HardwarePlatform,
-      "BuildVersion": BuildVersion,
-      "ProductType": ProductType,
-      "BoardId": BoardId,
-      "UniqueDeviceID": UDID,
-      "IDFV": generateUUID().toUpperCase(),
-      "IDFA": generateUUID().toUpperCase(),
-      "AllowYouTube": "1", //random
-      "AllowYouTubePlugin": "1",//random
-      "AmountDataAvailable": Math.floor((Math.random() * 100000000000) + 10000000000),
-      "AmountDataReserved": Math.floor((Math.random() * 1000000000) + 100000000),
-      "TotalDataAvailable": dl - Math.floor((Math.random() * 2000000000) + 1000000000),
-      "TotalDiskCapacity": dl,
-      "TotalSystemAvailable": 0,
-      "brightnessLevel": brightnessLevel,
-      "BatteryLevel": BatteryLevel,
-      "SSIDInfo": SSIDInfo,
-      "TotalSystemCapacity": Math.floor((Math.random() * 10000000000) + 5000000000),
-      "BluetoothAddress": FK_BLUETOOTH_ADDR,
-      "WifiAddressData": FK_WIFI_ADDR,
-      "FK_IMEI": FK_IMEI,
-      "FK_ECID": FK_ECID,
-      "NetworkType": NetworkType,
-      "DeviceToken": DeviceToken.toLowerCase(),
-      "Systemversion": Systemversion,
-      "UA": UA,
-      "Releasenumber": Releasenumber,
-      "CPID": CPID,
-      "CpuFreq": CpuFreq,
-      "nCpu": nCpu,
-      "Cpufamily": Cpufamily,
-      "MemorySize": MemorySize,
-      "ScreenHeight": ScreenHeight,
-      "ScreenWidth": ScreenWidth,
-      "ResolutionHeight": ResolutionHeight,
-      "ResolutionWidth": ResolutionWidth,
-      "DeviceBatteryState":random.int(1,3),
-      "Timezone": {
-        "Myip:": ip,
-        "city": city,
-        "country": country,
-        "MobileSubscriberCountryCode": MobileSubscriberCountryCode,
-        "MobileSubscriberNetworkCode": MobileSubscriberNetworkCode,
-        "Network": Network,
-        "countryCode": countryCode,
-        "language": lang,
-        "iso639": iso639,
-        "isp": isp,
-        "lat": lat,
-        "lon": lon,
-        "org": org,
-        "region": region,
-        "regionName": regionName,
-        "offset": offset,
-        "proxy": proxy,
-        "timezoneb": timezoneb,
-        "bootime": bootime,
-        "zip": zip
-      }
-    });
+    var bootime = Math.floor(Math.random() * 86400 * 365) + 86400 * 7; 
+    var data;
+    if(TargetApplicationFakeDeviceToken!==undefined&&TargetApplicationFakeUIScreen!==undefined&&TargetApplicationFakeIdentifierForVendor!==undefined&&FakeEnabled!==undefined&&FakeMGCopyAnswer!==undefined&&FakeIOKitAndAppleData!==undefined)
+    {
+      data = ({
+        "SerialNumber": getserial,
+        "DeviceName": name,
+        "UserAssignedDeviceName": name,
+        "ProductVersion": ProductVersion1,
+        "MajorVersion": MajorVersion,
+        "MinorVersion": MinorVersion,
+        "PatchVersion": PatchVersion,
+        "CPUArchitecture": getcpu(ProductType),
+        "HWModelStr": HWModelStr,
+        "HardwarePlatform": HardwarePlatform,
+        "BuildVersion": BuildVersion,
+        "ProductType": ProductType,
+        "BoardId": BoardId,
+        "UniqueDeviceID": UDID,
+        "IDFV": generateUUID().toUpperCase(),
+        "IDFA": generateUUID().toUpperCase(),
+        "AllowYouTube": "1", //random
+        "AllowYouTubePlugin": "1",//random
+        "AmountDataAvailable": Math.floor((Math.random() * 100000000000) + 10000000000),
+        "AmountDataReserved": Math.floor((Math.random() * 1000000000) + 100000000),
+        "TotalDataAvailable": dl - Math.floor((Math.random() * 2000000000) + 1000000000),
+        "TotalDiskCapacity": dl,
+        "TotalSystemAvailable": 0,
+        "brightnessLevel": brightnessLevel,
+        "BatteryLevel": BatteryLevel,
+        "SSIDInfo": SSIDInfo,
+        "TotalSystemCapacity": Math.floor((Math.random() * 10000000000) + 5000000000),
+        "BluetoothAddress": FK_BLUETOOTH_ADDR,
+        "WifiAddressData": FK_WIFI_ADDR,
+        "FK_IMEI": FK_IMEI,
+        "FK_ECID": FK_ECID,
+        "NetworkType": NetworkType,
+        "DeviceToken": DeviceToken.toLowerCase(),
+        "Systemversion": Systemversion,
+        "UA": UA,
+        "Releasenumber": Releasenumber,
+        "CPID": CPID,
+        "CpuFreq": CpuFreq,
+        "nCpu": nCpu,
+        "Cpufamily": Cpufamily,
+        "MemorySize": MemorySize,
+        "ScreenHeight": ScreenHeight,
+        "ScreenWidth": ScreenWidth,
+        "ResolutionHeight": ResolutionHeight,
+        "ResolutionWidth": ResolutionWidth,
+        "DeviceBatteryState":random.int(1,3),
+        "TargetApplicationFakeDeviceToken":TargetApplicationFakeDeviceToken,
+        "TargetApplicationFakeUIScreen":TargetApplicationFakeUIScreen,
+        "TargetApplicationFakeIdentifierForVendor":TargetApplicationFakeIdentifierForVendor,
+        "FakeEnabled":FakeEnabled,
+        "FakeMGCopyAnswer":FakeMGCopyAnswer,
+        "FakeIOKitAndAppleData":FakeIOKitAndAppleData,
+        "Timezone": {
+          "Myip:": ip,
+          "city": city,
+          "country": country,
+          "MobileSubscriberCountryCode": MobileSubscriberCountryCode,
+          "MobileSubscriberNetworkCode": MobileSubscriberNetworkCode,
+          "Network": Network,
+          "countryCode": countryCode,
+          "language": lang,
+          "iso639": iso639,
+          "isp": isp,
+          "lat": lat,
+          "lon": lon,
+          "org": org,
+          "region": region,
+          "regionName": regionName,
+          "offset": offset,
+          "proxy": proxy,
+          "timezoneb": timezoneb,
+          "bootime": bootime,
+          "zip": zip
+        }
+      });
+    }else{
+      data = ({
+        "SerialNumber": getserial,
+        "DeviceName": name,
+        "UserAssignedDeviceName": name,
+        "ProductVersion": ProductVersion1,
+        "MajorVersion": MajorVersion,
+        "MinorVersion": MinorVersion,
+        "PatchVersion": PatchVersion,
+        "CPUArchitecture": getcpu(ProductType),
+        "HWModelStr": HWModelStr,
+        "HardwarePlatform": HardwarePlatform,
+        "BuildVersion": BuildVersion,
+        "ProductType": ProductType,
+        "BoardId": BoardId,
+        "UniqueDeviceID": UDID,
+        "IDFV": generateUUID().toUpperCase(),
+        "IDFA": generateUUID().toUpperCase(),
+        "AllowYouTube": "1", //random
+        "AllowYouTubePlugin": "1",//random
+        "AmountDataAvailable": Math.floor((Math.random() * 100000000000) + 10000000000),
+        "AmountDataReserved": Math.floor((Math.random() * 1000000000) + 100000000),
+        "TotalDataAvailable": dl - Math.floor((Math.random() * 2000000000) + 1000000000),
+        "TotalDiskCapacity": dl,
+        "TotalSystemAvailable": 0,
+        "brightnessLevel": brightnessLevel,
+        "BatteryLevel": BatteryLevel,
+        "SSIDInfo": SSIDInfo,
+        "TotalSystemCapacity": Math.floor((Math.random() * 10000000000) + 5000000000),
+        "BluetoothAddress": FK_BLUETOOTH_ADDR,
+        "WifiAddressData": FK_WIFI_ADDR,
+        "FK_IMEI": FK_IMEI,
+        "FK_ECID": FK_ECID,
+        "NetworkType": NetworkType,
+        "DeviceToken": DeviceToken.toLowerCase(),
+        "Systemversion": Systemversion,
+        "UA": UA,
+        "Releasenumber": Releasenumber,
+        "CPID": CPID,
+        "CpuFreq": CpuFreq,
+        "nCpu": nCpu,
+        "Cpufamily": Cpufamily,
+        "MemorySize": MemorySize,
+        "ScreenHeight": ScreenHeight,
+        "ScreenWidth": ScreenWidth,
+        "ResolutionHeight": ResolutionHeight,
+        "ResolutionWidth": ResolutionWidth,
+        "DeviceBatteryState":random.int(1,3),
+        "Timezone": {
+          "Myip:": ip,
+          "city": city,
+          "country": country,
+          "MobileSubscriberCountryCode": MobileSubscriberCountryCode,
+          "MobileSubscriberNetworkCode": MobileSubscriberNetworkCode,
+          "Network": Network,
+          "countryCode": countryCode,
+          "language": lang,
+          "iso639": iso639,
+          "isp": isp,
+          "lat": lat,
+          "lon": lon,
+          "org": org,
+          "region": region,
+          "regionName": regionName,
+          "offset": offset,
+          "proxy": proxy,
+          "timezoneb": timezoneb,
+          "bootime": bootime,
+          "zip": zip
+        }
+      });
+    }
+     
   }
 
   res.status(200).send(data);
@@ -486,6 +585,7 @@ exports.createoldDevice = async (req, res) => {
       { type: Sequelize.QueryTypes.INSERT }).then(function (results) {
         res.status(200).send("Success");
       });
+      await sequelize.close();
   }
 
 };

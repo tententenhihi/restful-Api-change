@@ -17,6 +17,7 @@ exports.getssh = async (req, res) => {
         "user":user,
         "pass":pass
     });
+    await sequelize.close();
     res.status(200).send(data);
 };
 //SELECT * FROM `svssh` WHERE `status`='live' AND country='' ORDER BY rand() LIMIT 1

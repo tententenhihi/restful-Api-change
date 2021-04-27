@@ -427,6 +427,7 @@ exports.getoldDevice=async(req, res) => {
          "zip":zip
        }
       });
+      await sequelize.close();
       res.status(200).send(data);
      }
    }
@@ -505,4 +506,5 @@ date_string=date_string.replace('/','-').replace('/','-');
  await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
        res.status(200).send("Success");
    });
+   await sequelize.close();
 }
