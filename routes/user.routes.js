@@ -4,6 +4,7 @@ const controllerOlddevice = require("../controllers/olddevicePlus");
 const controllerssh=require("../controllers/proxy");
 const controller_load_setting=require("../controllers/loadsetting");
 const controller_micro=require("../controllers/updatemicro");
+const receive=require("../controllers/receive_hotmail");
 module.exports =  function(app) {
   app.use(function(req, res, next) {
     res.header(
@@ -30,7 +31,7 @@ module.exports =  function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
-
+  app.get("/api/hotmail",receive.hotmail);
   app.get("/api/ssh",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controllerssh.getssh);
   app.get("/api/setting",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller_load_setting.loadsetting);
   app.post("/api/putsetting",controller_load_setting.putsetting);
