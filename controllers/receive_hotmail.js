@@ -37,28 +37,43 @@ exports.hotmail = async (req, res) => {
                         var id = item.attributes.uid;
                         var idHeader = "Imap-Id: " + id + "\r\n";
                         simpleParser(idHeader + all.body, (err, mail) => {
-                            if (!mail.subject.includes('OneDrive')) {
-                                if (sub != null) {
-                                    if (mail.from.value[0]['address'].includes(sub)) {
-                                        var address = mail.from.value[0]['address'];
-                                        var name = mail.from.value[0]['name'];
-                                        var content = {
-                                            'from': address,
-                                            'name': name,
-                                            'subject': mail.subject,
-                                            'content': mail.text
-                                        }
-                                    }
-                                } else {
+                           // console.log(mail.subject);
+                            
+                            if (!mail.from.value[0]['address'].includes('microsoft')) {
+                                if(mail.subject!==undefined){
+                                    if (sub != null) {
+                                        // console.log(mail.from.value[0]['address']);
+                                         if (mail.from.value[0]['address'].includes(sub)) {
+                                             var address = mail.from.value[0]['address'];
+                                             var name = mail.from.value[0]['name'];
+                                             var content = {
+                                                 'from': address,
+                                                 'name': name,
+                                                 'subject': mail.subject,
+                                                 'content': mail.text
+                                             }
+                                         }
+                                     } else {
+                                         var address = mail.from.value[0]['address'];
+                                         var name = mail.from.value[0]['name'];
+                                         var content = {
+                                             'from': address,
+                                             'name': name,
+                                             'subject': mail.subject,
+                                             'content': mail.text
+                                         }
+                                     }
+                                }else{
                                     var address = mail.from.value[0]['address'];
                                     var name = mail.from.value[0]['name'];
                                     var content = {
                                         'from': address,
                                         'name': name,
-                                        'subject': mail.subject,
+                                        'subject': "",
                                         'content': mail.text
                                     }
                                 }
+                               
                                 if(content!=null)
                                 Array.push(content);
                                
