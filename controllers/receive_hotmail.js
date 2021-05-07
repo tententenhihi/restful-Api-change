@@ -3,10 +3,11 @@ const simpleParser = require('mailparser').simpleParser;
 const _ = require('lodash');
 
 exports.hotmail = async (req, res) => {
-    let user = req.body.user;
-    let pass = req.body.pass;
-    let phanloai = req.body.map;//gmail,hotmail
-    let sub = req.body.sub;
+   var queryParameter=req.query;
+    let user = queryParameter.user;
+    let pass = queryParameter.pass;
+    let sub=queryParameter.search;
+ //   let phanloai = req.body.map;//gmail,hotmail
     let Array = [];
     var config = {
         imap: {
@@ -79,8 +80,10 @@ exports.hotmail = async (req, res) => {
                                
                                 
                             }
-                           // console.log(doneCount);
+                            //console.log(doneCount);
                             doneCount++;
+                            //console.log(Array);
+                            
                             if(doneCount == messages.length)
                             {
                                 res.status(200).send(Array);
