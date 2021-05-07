@@ -39,7 +39,7 @@ exports.hotmail = async (req, res) => {
                         simpleParser(idHeader + all.body, (err, mail) => {
                             if (!mail.subject.includes('OneDrive')) {
                                 if (sub != null) {
-                                    if (mail.subject.includes(sub)) {
+                                    if (mail.from.value[0]['address'].includes(sub)) {
                                         var address = mail.from.value[0]['address'];
                                         var name = mail.from.value[0]['name'];
                                         var content = {
