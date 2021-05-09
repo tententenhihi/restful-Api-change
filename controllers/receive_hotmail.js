@@ -19,32 +19,48 @@ exports.hotmail = async (req, res) => {
             authTimeout: 3000
         }
     };
-
+    
     imaps.connect(config).then(function (connection) {
-        return connection.openBox('INBOX').then(function () {
-            var searchCriteria = ['1:10'];
-            var fetchOptions = {
-                bodies: ['HEADER', 'TEXT', ''],
-            };
-
-            return connection.search(searchCriteria, fetchOptions).then(function (messages) {
-                var doneCount=0;
-                for(var indexMessage=0; indexMessage<messages.length;indexMessage++)
-                {
-                    
-                    var item = messages[indexMessage];
-                    (function(item){
-                        var all = _.find(item.parts, { "which": "" })
-                        var id = item.attributes.uid;
-                        var idHeader = "Imap-Id: " + id + "\r\n";
-                        simpleParser(idHeader + all.body, (err, mail) => {
-                           // console.log(mail.subject);
-                            
-                            if (!mail.from.value[0]['address'].includes('microsoft')) {
-                                if(mail.subject!==undefined){
-                                    if (sub != null) {
-                                        // console.log(mail.from.value[0]['address']);
-                                         if (mail.from.value[0]['address'].includes(sub)) {
+       
+        if(connection.error) 
+        {
+            res.status(200).send(connection.error);
+         }
+        else{
+            return connection.openBox('INBOX').then(function () {
+                var searchCriteria = ['1:10'];
+                var fetchOptions = {
+                    bodies: ['HEADER', 'TEXT', ''],
+                };
+    
+                return connection.search(searchCriteria, fetchOptions).then(function (messages) {
+                    var doneCount=0;
+                    for(var indexMessage=0; indexMessage<messages.length;indexMessage++)
+                    {
+                        
+                        var item = messages[indexMessage];
+                        (function(item){
+                            var all = _.find(item.parts, { "which": "" })
+                            var id = item.attributes.uid;
+                            var idHeader = "Imap-Id: " + id + "\r\n";
+                            simpleParser(idHeader + all.body, (err, mail) => {
+                               // console.log(mail.subject);
+                                
+                                if (!mail.from.value[0]['address'].includes('microsoft')) {
+                                    if(mail.subject!==undefined){
+                                        if (sub != null) {
+                                            // console.log(mail.from.value[0]['address']);
+                                             if (mail.from.value[0]['address'].includes(sub)) {
+                                                 var address = mail.from.value[0]['address'];
+                                                 var name = mail.from.value[0]['name'];
+                                                 var content = {
+                                                     'from': address,
+                                                     'name': name,
+                                                     'subject': mail.subject,
+                                                     'content': mail.text
+                                                 }
+                                             }
+                                         } else {
                                              var address = mail.from.value[0]['address'];
                                              var name = mail.from.value[0]['name'];
                                              var content = {
@@ -54,49 +70,44 @@ exports.hotmail = async (req, res) => {
                                                  'content': mail.text
                                              }
                                          }
-                                     } else {
-                                         var address = mail.from.value[0]['address'];
-                                         var name = mail.from.value[0]['name'];
-                                         var content = {
-                                             'from': address,
-                                             'name': name,
-                                             'subject': mail.subject,
-                                             'content': mail.text
-                                         }
-                                     }
-                                }else{
-                                    var address = mail.from.value[0]['address'];
-                                    var name = mail.from.value[0]['name'];
-                                    var content = {
-                                        'from': address,
-                                        'name': name,
-                                        'subject': "",
-                                        'content': mail.text
+                                    }else{
+                                        var address = mail.from.value[0]['address'];
+                                        var name = mail.from.value[0]['name'];
+                                        var content = {
+                                            'from': address,
+                                            'name': name,
+                                            'subject': "",
+                                            'content': mail.text
+                                        }
+                                     //   console.log(mail.text);
                                     }
+                                   
+                                    if(content!=null){
+                                        Array.push(content);
+                                    }
+                                   
+                                   
+                                    
                                 }
-                               
-                                if(content!=null)
-                                Array.push(content);
-                               
+                                //console.log(doneCount);
+                                doneCount++;
+                                //console.log(Array);
                                 
-                            }
-                            //console.log(doneCount);
-                            doneCount++;
-                            //console.log(Array);
-                            
-                            if(doneCount == messages.length)
-                            {
-                                res.status(200).send(Array);
-                            } 
-
-                        });
-                    })(item);
+                                if(doneCount == messages.length)
+                                {
+                                    res.status(200).send(Array);
+                                } 
+    
+                            });
+                        })(item);
+                        
+                    }
                     
-                }
-                
-                
+                    
+                });
             });
-        });
+        };
+       
 
     });
 
