@@ -32,7 +32,6 @@ function doRequest(options, data) {
 
     //http://api.maxclone.vn/api/portal/buyaccount?key=c009dcfd958d436ea89dcf278ad08392a7f0cc4467484399a11bf10863a114c5&type=HOTMAIL&quantity=1
     var options = {
-    
         host: 'api.maxclone.vn',
         path: '/api/portal/buyaccount?key=c009dcfd958d436ea89dcf278ad08392a7f0cc4467484399a11bf10863a114c5&type=HOTMAIL&quantity=1',
       };
