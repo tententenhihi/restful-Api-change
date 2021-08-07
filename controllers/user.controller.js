@@ -346,11 +346,6 @@ exports.SELECT = async (req, res) => {
       ip = ip.substr(7)
     }
   }
-  // (async () => {
-  //   console.log(await publicIp.v6('171.240.144.65'));
-   
-  // })();
-  
   var options = {
     host: 'pro.ip-api.com',
     path: '/json/' + ip + '?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query&key=DcyaIbvQx69VZNA',
