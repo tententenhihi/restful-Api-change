@@ -237,29 +237,22 @@ exports.SELECT = async (req, res) => {
   var ip = req.body.clientIp;
   var deviceinfo = req.body.device;
   var os = req.body.os;
-
-
-
   var TargetApplicationFakeDeviceToken=req.body.TargetApplicationFakeDeviceToken;
   var TargetApplicationFakeUIScreen=req.body.TargetApplicationFakeUIScreen;
   var TargetApplicationFakeIdentifierForVendor=req.body.TargetApplicationFakeIdentifierForVendor;
-  
   var FakeEnabled=req.body.FakeEnabled;
   var FakeMGCopyAnswer=req.body.FakeMGCopyAnswer;
   var FakeIOKitAndAppleData=req.body.FakeIOKitAndAppleData;
-
-
-
   var sql = "";
   if (deviceinfo === undefined && os === undefined) {
-    sql = 'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
+    sql = 'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,os.network_version,os.webgl_version_old,os.webgl_version_new,os.webkit_version,os.webkit_version_safari,os.webkit_version_short,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
   } else if (deviceinfo === undefined && os !== undefined){
-    sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where os.OSVersion like '%" + os + "%' ORDER BY RAND() LIMIT 1";
+    sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,os.network_version,os.webgl_version_old,os.webgl_version_new,os.webkit_version,os.webkit_version_safari,os.webkit_version_short,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where os.OSVersion like '%" + os + "%' ORDER BY RAND() LIMIT 1";
   }else if (deviceinfo !== undefined && os === undefined){
-    sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where model.HWMachine='" + deviceinfo + "' ORDER BY RAND() LIMIT 1";
+    sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,os.network_version,os.webgl_version_old,os.webgl_version_new,os.webkit_version,os.webkit_version_safari,os.webkit_version_short,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where model.HWMachine='" + deviceinfo + "' ORDER BY RAND() LIMIT 1";
   }
   else {
-    sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where os.OSVersion like '%" + os + "%' and model.HWMachine='" + deviceinfo + "' ORDER BY RAND() LIMIT 1";
+    sql = "SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,os.network_version,os.webgl_version_old,os.webgl_version_new,os.webkit_version,os.webkit_version_safari,os.webkit_version_short,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model where os.OSVersion like '%" + os + "%' and model.HWMachine='" + deviceinfo + "' ORDER BY RAND() LIMIT 1";
   }
 
 
@@ -275,7 +268,7 @@ exports.SELECT = async (req, res) => {
     }
   );
   if (info.length === 0) {
-    var sqlnew = 'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
+    var sqlnew = 'SELECT os.OSVersion AS \'ProductVersion\',model.HWModel AS \'HWModelStr\',model.Platform AS \'HardwarePlatform\',os.Build AS \'BuildVersion\',model.HWMachine AS \'ProductType\',model.BDID AS \'BoardId\',os.utsname_Systemversion AS \'Systemversion\',os.UserAgent AS \'UA\',os.utsname_Releasenumber AS \'Releasenumber\',model.CPID,model.CpuFreq,os.network_version,os.webgl_version_old,os.webgl_version_new,os.webkit_version,os.webkit_version_safari,os.webkit_version_short,model.nCpu,model.cpufamily,model.MemorySize,model.ScreenHeight,model.ScreenWidth,model.ResolutionHeight,model.ResolutionWidth FROM os,model ORDER BY RAND() LIMIT 1';
     info = await db.sequelize.query(
       sqlnew,
       {
@@ -285,10 +278,6 @@ exports.SELECT = async (req, res) => {
     );
 
   }
-
-
-
-
   var getserial = serial();
   var name = namedv.namedevice().trim();
   var SSIDInfo = namedv.devicename().trim();
