@@ -323,6 +323,15 @@ exports.SELECT = async (req, res) => {
   var ResolutionWidth = info[0]['ResolutionWidth'];
   var nCpu = info[0]['nCpu'];
   var Cpufamily = info[0]['cpufamily'];
+  //
+  var network_version = info[0]['network_version'];
+  var webgl_version_old=info[0]['webgl_version_old'];
+  var webgl_version_new=info[0]['webgl_version_new'];
+  var webkit_version=info[0]['webkit_version'];
+  var webkit_version_safari=info[0]['webkit_version_safari'];
+  var webkit_version_short=info[0]['webkit_version_short'];
+  //
+
   var FK_BLUETOOTH_ADDR = "XX:XX:XX:XX:XX:XX".replace(/X/g, function () {
     return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)).toLowerCase();
   });
@@ -477,7 +486,14 @@ exports.SELECT = async (req, res) => {
           "timezoneb": timezoneb,
           "bootime": bootime,
           "zip": zip
-        }
+        },
+        "network_version":network_version,
+        "webgl_version_old":webgl_version_old,
+        "webgl_version_new":webgl_version_new,
+        "webkit_version":webkit_version,
+        "webkit_version_safari":webkit_version_safari,
+        "webkit_version_short":webkit_version_short
+
       });
     }else{
       data = ({
@@ -548,7 +564,13 @@ exports.SELECT = async (req, res) => {
           "timezoneb": timezoneb,
           "bootime": bootime,
           "zip": zip
-        }
+        },
+        "network_version":network_version,
+        "webgl_version_old":webgl_version_old,
+        "webgl_version_new":webgl_version_new,
+        "webkit_version":webkit_version,
+        "webkit_version_safari":webkit_version_safari,
+        "webkit_version_short":webkit_version_short
       });
     }
      
