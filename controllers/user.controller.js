@@ -148,6 +148,12 @@ function random3g4g() {
   } 
   return chon;
 }
+function genipv6(){
+  var array = ["a", "b", "c", "d", "e", "f", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  var s=random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+"::"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+":"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+":"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+":"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1);
+  return s;
+ //a b c d e f
+}
 
 function getUDID() {
 
@@ -235,6 +241,7 @@ function getcpu(HWModelStr) {
 
 exports.SELECT = async (req, res) => {
   var ip = req.body.clientIp;
+  var ipLan = req.body.ipv4;
   var deviceinfo = req.body.device;
   var os = req.body.os;
   var TargetApplicationFakeDeviceToken=req.body.TargetApplicationFakeDeviceToken;
@@ -559,7 +566,9 @@ exports.SELECT = async (req, res) => {
         "webgl_version_new":webgl_version_new,
         "webkit_version":webkit_version,
         "webkit_version_safari":webkit_version_safari,
-        "webkit_version_short":webkit_version_short
+        "webkit_version_short":webkit_version_short,
+        "ipv4":ipLan,
+        "ipv6":genipv6()
       });
     }
      
