@@ -149,8 +149,9 @@ function random3g4g() {
   return chon;
 }
 function genipv6(){
-  var array = ["a", "b", "c", "d", "e", "f", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  var s=random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+"::"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+":"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+":"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+":"+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array.length - 1);
+  var array = ["a", "b", "c", "d", "e", "f"]
+  var array1=["a", "b", "c", "d", "e", "f","1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  var s=random.int(0, array.length - 1)+random.int(0, array.length - 1)+random.int(0, array1.length - 1)+random.int(0, array1.length - 1)+"::"+random.int(0, array1.length - 1)+random.int(0, array.length - 1)+":"+random.int(0, array1.length - 1)+random.int(0, array.length - 1)+random.int(0, array1.length - 1)+random.int(0, array1.length - 1)+":"+random.int(0, array.length - 1)+random.int(0, array1.length - 1)+random.int(0, array1.length - 1)+random.int(0, array1.length - 1)+":"+random.int(0, array1.length - 1)+random.int(0, array.length - 1)+random.int(0, array1.length - 1)+random.int(0, array1.length - 1);
   return s;
  //a b c d e f
 }
