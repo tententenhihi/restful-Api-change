@@ -36,7 +36,7 @@ module.exports =  function(app) {
   app.get("/api/ssh",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controllerssh.getssh);
   app.get("/api/setting",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller_load_setting.loadsetting);
   app.post("/api/putsetting",controller_load_setting.putsetting);
-  app.post("/api/postsetting",controller_load_setting.postSetting);
+  //app.post("/api/postsetting",controller_load_setting.postSetting);
   app.post("/api/set_all_setting",controller_load_setting.put_allSetting);
   app.post("/api/deleteSetting",controller_load_setting.delete_setting);
   app.get("/api/micro",[authJwt.verifyToken, authJwt.isModeratorOrAdmin],controller_micro.micro);

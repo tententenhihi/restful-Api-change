@@ -3,41 +3,37 @@ const Sequelize = require("sequelize");
 exports.loadsetting = async (req, res) => {
     let username = req.headers["username"];
     const setting = await db.sequelize.query(
-        "SELECT *,REPLACE(`setting`,'\\r\\n','!!') FROM `serial` JOIN `members` ON serial.mod=members.userName WHERE members.userName='" + username + "'",
+        "SELECT * FROM `serial` JOIN `members` ON serial.mod=members.userName WHERE members.userName='" + username + "'",
         {
             nest: true,
             type: Sequelize.SELECT
         }
     );
-    console.log(setting[1]);
-    var array=[];
+    var array = [];
     setting.forEach(element => {
         var ban = element['ban'];
-        var loadsetting = element["REPLACE(`setting`,'\\r\\n','!!')"];
-        var loadsetting1 = element["setting"];
-        var ipdevice=element["ip_device"];
-        var offer=element["offer"];
+        var loadsetting="";
+        if(element["setting"]!=""){
+            loadsetting = JSON.parse(element["setting"]);
+        }
+        
+        var array_offer = [];
+        if(element["offer"]!="[]"){
+            var offer = element["offer"].split('@');
+            offer.forEach(element => array_offer.push(JSON.parse(element)));
+        }
         var serial = element["serial"];
         var device = element["modem_phone"];
-        var ssh = element["ssh"];
-        var vip72 = element["vip72"];
-        var micro = element["micro"]
-        var proxy = element["proxy"];
-        var note=element["note"];
+        var note = element["note"];
         var data;
         if (ban[0]['ban'] != "0") {
             data = ({
-                "ip":ipdevice,
-                "device": device,
-                "offer":offer,
-                "mod":username,
                 "serial": serial,
-                "setting": loadsetting1,
-                "proxy": proxy,
-                "micro": micro,
-                "ssh": ssh,
-                "vip72": vip72,
-                "note":note,
+                "device": device,
+                "offer": array_offer,
+                "mod": username,
+                "setting": loadsetting,
+                "note": note,
                 "active": "yes"
             });
         } else {
@@ -49,10 +45,10 @@ exports.loadsetting = async (req, res) => {
         array.push(data);
     });
 
-    
+
     res.status(200).send(array);
 };
-exports.getmicro=async(req,res)=>{
+exports.getmicro = async (req, res) => {
     //let userkey = req.headers["userkey"];
     const micro = await db.sequelize.query(
         "SELECT * FROM `micro`",
@@ -61,71 +57,55 @@ exports.getmicro=async(req,res)=>{
             type: Sequelize.SELECT
         }
     );
-    var mang=[];
+    var mang = [];
     micro.forEach(element => {
-        mang.push(element["userkey"]+":"+element["thongtin"]+":"+element["apikey"]);
+        mang.push(element["userkey"] + ":" + element["thongtin"] + ":" + element["apikey"]);
     });
-    
+
     res.status(200).send(mang);
 }
-
-exports.postSetting = async (req, res) => {
-    let mod=req.body.mod;
+exports.putsetting = async (req, res) => {
+    let mod = req.body.mod;
     let serial = req.body.serial;
-    let proxy = req.body.proxy;
     let setting = req.body.setting;
-    let ip_device=req.body.ip_device;
-    let offer=req.body.offer;
-    let ssh = req.body.ssh;
-    let vip72 = req.body.vip72;
+    if(setting==null)setting="";
+    let ip_device = req.body.ip_device;
+    let offer = req.body.offer;
+    let of = "[]";
+    if(offer!=null)
+    offer.forEach(element => {
+        if (of == "[]") {
+            of = JSON.stringify(element)
+        } else {
+            of = of + "@" + JSON.stringify(element);
+        }
+    });
     let note = req.body.note;
-    let micro = req.body.micro;
-    const result = await db.sequelize.query(
-        "SELECT * FROM `serial` WHERE `serial`='"+serial+"' and `mod`='"+mod+"'",
+    await db.sequelize.query("SELECT * FROM `serial` WHERE `serial`='" + serial + "' and `mod`='" + mod + "'",
         {
             nest: true,
             type: Sequelize.SELECT
-        }
-    );
-    try{
-        var ip=result[0]['ip_device'];
-        res.status(204).send("Error");
-    }catch{
-        var sql="INSERT INTO `serial` (`ip_device`, `serial`, `mod`, `offer`, `setting`, `proxy`, `ban`, `micro`, `modem_phone`, `ssh`, `vip72`, `note`) VALUES ('"+ip_device+"', '"+serial+"', '"+mod+"', '"+offer+"', '"+setting+"', '"+proxy+"', b'1', '"+micro+"', 'iphone 6s', '"+ssh+"', '"+vip72+"', '"+note+"');";
-        await db.sequelize.query(sql,{ type: Sequelize.QueryTypes.INSERT }).then(function(results){
-            
-       res.status(200).send("Success");
-         });
-    }
-    
-
-       
-
+        }).then(async function (users) {
+            if (users.length == 0) {
+                 var sql = "INSERT INTO `serial` (`ip_device`, `serial`, `mod`, `offer`, `setting`, `ban`, `modem_phone`, `note`) VALUES ('" + ip_device + "', '" + serial + "', '" + mod + "', '" + offer + "', '" + setting + "', b'1', 'iphone 6s','" + note + "');";
+                 await db.sequelize.query(sql, { type: Sequelize.QueryTypes.INSERT }).then(function (results) {
+                     res.status(200).send("creat new success");
+                 });
+            } else {
+                await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`ip_device`='" + ip_device + "',`setting`='" + JSON.stringify(setting) + "',`offer`='" + of + "' WHERE `serial`='" + serial + "' and `ban`='1'");
+                res.status(200).send("edit success");
+            }
+        });
    
-}
-exports.putsetting = async (req, res) => {
-    let mod=req.body.mod;
-    let serial = req.body.serial;
-    let proxy = req.body.proxy;
-    let setting = req.body.setting;
-    let ip_device=req.body.ip_device;
-    let offer=req.body.offer;
-    let ssh = req.body.ssh;
-    let vip72 = req.body.vip72;
-    let note = req.body.note;
-    let micro = req.body.micro;
-    await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`ip_device`='" + ip_device + "',`setting`='" + setting + "',`offer`='" + offer + "',`proxy`='" + proxy + "',`micro`='" + micro + "',`ssh`='" + ssh + "',`vip72`='" + vip72 + "' WHERE `serial`='" + serial + "' and `ban`='1'")
-    
-    res.status(200).send("success");
+
+
 }
 
 exports.put_allSetting = async (req, res) => {
-    let mod=req.body.mod;
+    let mod = req.body.mod;
     let serial = req.body.serial;
-    
-
     const result_get_serial = await db.sequelize.query(
-        "SELECT * FROM `serial` WHERE `serial`='"+serial+"' and `mod`='"+mod+"'",
+        "SELECT * FROM `serial` WHERE `serial`='" + serial + "' and `mod`='" + mod + "'",
         {
             nest: true,
             type: Sequelize.SELECT
@@ -133,29 +113,28 @@ exports.put_allSetting = async (req, res) => {
     );
 
     const result_get_list = await db.sequelize.query(
-        "SELECT * FROM `serial` WHERE `mod`='"+mod+"'",
+        "SELECT * FROM `serial` WHERE `mod`='" + mod + "'",
         {
             nest: true,
             type: Sequelize.SELECT
         }
     );
-        var setting=result_get_serial[0]["setting"];
-        var offer=result_get_serial[0]["offer"];
-        console.log(setting);
-        result_get_list.forEach(async (element)=>{
-            var serialll=element["serial"];
-    //        console.log(serialll);
-     await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" +serialll + "' and `ban`='1'");
-        });
-        
-     res.status(200).send("success");
+    var setting = result_get_serial[0]["setting"];
+    var offer = result_get_serial[0]["offer"];
+    console.log(setting);
+    result_get_list.forEach(async (element) => {
+        var serialll = element["serial"];
+        //        console.log(serialll);
+        await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" + serialll + "' and `ban`='1'");
+    });
+
+    res.status(200).send("success");
 }
-exports.delete_setting =async (req, res) => {
-    let mod=req.body.mod;
+exports.delete_setting = async (req, res) => {
+    let mod = req.body.mod;
     let serial = req.body.serial;
-    var xoa="DELETE FROM `serial` WHERE `serial`='"+serial+"' AND `mod`='"+mod+"'";
-    await db.sequelize.query(xoa,{nest: true,type:Sequelize.QueryTypes.DELETE});
-    
+    var xoa = "DELETE FROM `serial` WHERE `serial`='" + serial + "' AND `mod`='" + mod + "'";
+    await db.sequelize.query(xoa, { nest: true, type: Sequelize.QueryTypes.DELETE });
     res.status(200).send("success");
 
 };
