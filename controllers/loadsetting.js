@@ -12,29 +12,38 @@ exports.loadsetting = async (req, res) => {
     var array = [];
     setting.forEach(element => {
         var ban = element['ban'];
-        var loadsetting="";
-        if(element["setting"]!=""){
+        var loadsetting = "";
+        if (element["setting"] != "") {
             loadsetting = JSON.parse(element["setting"]);
         }
-        
+
         var array_offer = [];
-        if(element["offer"]!="[]"){
+        if (element["offer"] != "[]") {
             var offer = element["offer"].split('@');
             offer.forEach(element => array_offer.push(JSON.parse(element)));
         }
         var serial = element["serial"];
         var device = element["modem_phone"];
         var note = element["note"];
+        var stt=element["ID"];
+        var ipadress=element["ip_device"];
+        var version=element["version"];
+        //var proxytool=element["proxy"];
         var data;
         if (ban[0]['ban'] != "0") {
             data = ({
+                "STT":stt,
+                "ipdevice":ipadress,
                 "serial": serial,
+                "version": version,
+               // "proxytool":proxytool,
                 "device": device,
-                "offer": array_offer,
-                "mod": username,
-                "setting": loadsetting,
                 "note": note,
-                "active": "yes"
+                "active": "yes",
+                "mod": username,
+                "offer": array_offer,
+                "setting": loadsetting
+               
             });
         } else {
             data = ({
@@ -68,18 +77,25 @@ exports.putsetting = async (req, res) => {
     let mod = req.body.mod;
     let serial = req.body.serial;
     let setting = req.body.setting;
-    if(setting==null)setting="";
-    let ip_device = req.body.ip_device;
+    if (setting == null) setting = "";
+    let ip_device = req.body.ipdevice;
+    let version = req.body.version;
     let offer = req.body.offer;
+    // if(typeof(offer)=="string"){
+    //     offer = Array.from(offer);
+
+    // }
+
+    console.log(offer);
     let of = "[]";
-    if(offer!=null)
-    offer.forEach(element => {
-        if (of == "[]") {
-            of = JSON.stringify(element)
-        } else {
-            of = of + "@" + JSON.stringify(element);
-        }
-    });
+    if (offer != null)
+        offer.forEach(element => {
+            if (of == "[]") {
+                of = JSON.stringify(element)
+            } else {
+                of = of + "@" + JSON.stringify(element);
+            }
+        });
     let note = req.body.note;
     await db.sequelize.query("SELECT * FROM `serial` WHERE `serial`='" + serial + "' and `mod`='" + mod + "'",
         {
@@ -87,16 +103,16 @@ exports.putsetting = async (req, res) => {
             type: Sequelize.SELECT
         }).then(async function (users) {
             if (users.length == 0) {
-                 var sql = "INSERT INTO `serial` (`ip_device`, `serial`, `mod`, `offer`, `setting`, `ban`, `modem_phone`, `note`) VALUES ('" + ip_device + "', '" + serial + "', '" + mod + "', '" + offer + "', '" + setting + "', b'1', 'iphone 6s','" + note + "');";
-                 await db.sequelize.query(sql, { type: Sequelize.QueryTypes.INSERT }).then(function (results) {
-                     res.status(200).send("creat new success");
-                 });
+                var sql = "INSERT INTO `serial` (`ip_device`, `version`, `serial`, `mod`, `offer`, `setting`, `ban`, `modem_phone`, `note`) VALUES ('" + ip_device + "', '" + version + "', '"+ serial + "', '" + mod + "', '" + of + "', '" + JSON.stringify(setting) + "', b'1', 'iphone 6s','" + note + "');";
+                await db.sequelize.query(sql, { type: Sequelize.QueryTypes.INSERT }).then(function (results) {
+                    res.status(200).send("creat new success");
+                });
             } else {
-                await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`ip_device`='" + ip_device + "',`setting`='" + JSON.stringify(setting) + "',`offer`='" + of + "' WHERE `serial`='" + serial + "' and `ban`='1'");
+                await db.sequelize.query("UPDATE `serial` SET `note`='" + note + "',`mod`='" + mod + "',`version`='" +version+"',`ip_device`='" + ip_device + "',`setting`='" + JSON.stringify(setting) + "',`offer`='" + of + "' WHERE `serial`='" + serial + "' and `ban`='1'");
                 res.status(200).send("edit success");
             }
         });
-   
+
 
 
 }
@@ -110,25 +126,31 @@ exports.put_allSetting = async (req, res) => {
             nest: true,
             type: Sequelize.SELECT
         }
-    );
-
-    const result_get_list = await db.sequelize.query(
-        "SELECT * FROM `serial` WHERE `mod`='" + mod + "'",
-        {
-            nest: true,
-            type: Sequelize.SELECT
+    ).then(async function (users) {
+        if (users.length != 0){
+            const result_get_list = await db.sequelize.query(
+                "SELECT * FROM `serial` WHERE `mod`='" + mod + "'",
+                {
+                    nest: true,
+                    type: Sequelize.SELECT
+                }
+            );
+            var setting = users[0]["setting"];
+            var offer = users[0]["offer"];
+            console.log(setting);
+            result_get_list.forEach(async (element) => {
+                var serialll = element["serial"];
+                await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" + serialll + "' and `ban`='1' and `mod`='" + mod + "'");
+            });
+    
+            res.status(200).send("success");
+        }else{
+            res.status(200).send("Error");
         }
-    );
-    var setting = result_get_serial[0]["setting"];
-    var offer = result_get_serial[0]["offer"];
-    console.log(setting);
-    result_get_list.forEach(async (element) => {
-        var serialll = element["serial"];
-        //        console.log(serialll);
-        await db.sequelize.query("UPDATE `serial` SET `setting`='" + setting + "',`offer`='" + offer + "' WHERE `serial`='" + serialll + "' and `ban`='1'");
+       
     });
 
-    res.status(200).send("success");
+
 }
 exports.delete_setting = async (req, res) => {
     let mod = req.body.mod;
